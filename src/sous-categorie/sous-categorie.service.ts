@@ -1,26 +1,44 @@
 import { Injectable } from '@nestjs/common';
-import { CreateSousCategorieDto } from './dto/create-sous-categorie.dto';
-import { UpdateSousCategorieDto } from './dto/update-sous-categorie.dto';
-
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { SousCategorie } from './entities/sous-categorie.entity';
+import { Produit } from 'src/produit/entities/produit.entity';
 @Injectable()
 export class SousCategorieService {
-  create(createSousCategorieDto: CreateSousCategorieDto) {
-    return 'This action adds a new sousCategorie';
+  constructor(
+    @InjectRepository(SousCategorie)
+    private readonly sousCategorieRepository: Repository<SousCategorie>,
+  ) {}
+
+  async create(sousCategorie: SousCategorie): Promise<SousCategorie> {
+    return await this.sousCategorieRepository.save(sousCategorie);
   }
 
-  findAll() {
-    return `This action returns all sousCategorie`;
+  async findAll(): Promise<SousCategorie[]> {
+    return await this.sousCategorieRepository.find({ relations: ['produits'] });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} sousCategorie`;
+  async findProduitsBySousCategorie(sousCategorieId: number): Promise<Produit[]> {
+    return await this.sousCategorieRepository
+      .createQueryBuilder('sousCategorie')
+      .leftJoinAndSelect('sousCategorie.produits', 'produit')
+      .where('sousCategorie.id = :id', { id: sousCategorieId })
+      .getMany()
+      .then((sousCategorie: SousCategorie[]) => sousCategorie[0].produits);
+  }
+  
+  
+
+  async findOne(id: number): Promise<SousCategorie> {
+    return await this.sousCategorieRepository.findOne({where: {id: id, }});
   }
 
-  update(id: number, updateSousCategorieDto: UpdateSousCategorieDto) {
-    return `This action updates a #${id} sousCategorie`;
+  async update(id: number, sousCategorie: SousCategorie): Promise<SousCategorie> {
+    await this.sousCategorieRepository.update(id, sousCategorie);
+    return await this.sousCategorieRepository.findOne({where: {id: id, }});
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} sousCategorie`;
+  async remove(id: number): Promise<void> {
+    await this.sousCategorieRepository.delete(id);
   }
 }

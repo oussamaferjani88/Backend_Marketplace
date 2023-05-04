@@ -1,26 +1,33 @@
 import { Injectable } from '@nestjs/common';
-import { CreateSignalDto } from './dto/create-signal.dto';
-import { UpdateSignalDto } from './dto/update-signal.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { Signal } from './entities/signal.entity';
 
 @Injectable()
 export class SignalService {
-  create(createSignalDto: CreateSignalDto) {
-    return 'This action adds a new signal';
+  constructor(
+    @InjectRepository(Signal)
+    private readonly signalRepository: Repository<Signal>,
+  ) {}
+
+  async findAll(): Promise<Signal[]> {
+    return await this.signalRepository.find();
   }
 
-  findAll() {
-    return `This action returns all signal`;
+  async findOne(id: number): Promise<Signal> {
+    return await this.signalRepository.findOne({where : {id}});
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} signal`;
+  async create(signal: Partial<Signal>): Promise<Signal> {
+    return await this.signalRepository.save(signal);
   }
 
-  update(id: number, updateSignalDto: UpdateSignalDto) {
-    return `This action updates a #${id} signal`;
+  async update(id: number, signal: Partial<Signal>): Promise<Signal> {
+    await this.signalRepository.update(id, signal);
+    return await this.signalRepository.findOne({where : {id}});
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} signal`;
+  async remove(id: number): Promise<void> {
+    await this.signalRepository.delete(id);
   }
 }

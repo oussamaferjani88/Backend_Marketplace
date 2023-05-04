@@ -1,34 +1,36 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Put, Delete } from '@nestjs/common';
+import { Panier } from './entities/panier.entity';
 import { PanierService } from './panier.service';
-import { CreatePanierDto } from './dto/create-panier.dto';
-import { UpdatePanierDto } from './dto/update-panier.dto';
 
 @Controller('panier')
 export class PanierController {
-  constructor(private readonly panierService: PanierService) {}
+
+  constructor(private panierService: PanierService) {}
 
   @Post()
-  create(@Body() createPanierDto: CreatePanierDto) {
-    return this.panierService.create(createPanierDto);
-  }
-
-  @Get()
-  findAll() {
-    return this.panierService.findAll();
+  async create(@Body() panier: Partial<Panier>): Promise<Panier> {
+    return await this.panierService.create(panier);
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.panierService.findOne(+id);
+  async findById(@Param('id') id: string): Promise<Panier> {
+    return await this.panierService.findById(Number(id));
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updatePanierDto: UpdatePanierDto) {
-    return this.panierService.update(+id, updatePanierDto);
+  @Get()
+  async findAll(): Promise<Panier[]> {
+    return await this.panierService.findAll();
+  }
+
+  @Put(':id')
+  async update(@Param('id') id: string, @Body() panier: Partial<Panier>): Promise<Panier> {
+    return await this.panierService.update(Number(id), panier);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.panierService.remove(+id);
+  async delete(@Param('id') id: string): Promise<void> {
+    return await this.panierService.delete(Number(id));
   }
+
 }
+

@@ -1,34 +1,44 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+} from '@nestjs/common';
 import { SignalService } from './signal.service';
-import { CreateSignalDto } from './dto/create-signal.dto';
-import { UpdateSignalDto } from './dto/update-signal.dto';
+import { Signal } from './entities/signal.entity';
 
-@Controller('signal')
+@Controller('signals')
 export class SignalController {
   constructor(private readonly signalService: SignalService) {}
 
-  @Post()
-  create(@Body() createSignalDto: CreateSignalDto) {
-    return this.signalService.create(createSignalDto);
-  }
-
   @Get()
-  findAll() {
+  findAll(): Promise<Signal[]> {
     return this.signalService.findAll();
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
+  findOne(@Param('id') id: string): Promise<Signal> {
     return this.signalService.findOne(+id);
   }
 
+  @Post()
+  create(@Body() signal: Partial<Signal>): Promise<Signal> {
+    return this.signalService.create(signal);
+  }
+
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateSignalDto: UpdateSignalDto) {
-    return this.signalService.update(+id, updateSignalDto);
+  update(
+    @Param('id') id: string,
+    @Body() signal: Partial<Signal>,
+  ): Promise<Signal> {
+    return this.signalService.update(+id, signal);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
+  remove(@Param('id') id: string): Promise<void> {
     return this.signalService.remove(+id);
   }
 }

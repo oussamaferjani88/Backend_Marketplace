@@ -1,26 +1,35 @@
 import { Injectable } from '@nestjs/common';
-import { CreatePanierDto } from './dto/create-panier.dto';
-import { UpdatePanierDto } from './dto/update-panier.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { Panier } from './entities/panier.entity';
 
 @Injectable()
 export class PanierService {
-  create(createPanierDto: CreatePanierDto) {
-    return 'This action adds a new panier';
+
+  constructor(
+    @InjectRepository(Panier) private panierRepository: Repository<Panier>
+  ) {}
+
+  async create(panier: Partial<Panier>): Promise<Panier> {
+    return await this.panierRepository.save(panier);
   }
 
-  findAll() {
-    return `This action returns all panier`;
+  async findById(id: number): Promise<Panier> {
+    return await this.panierRepository.findOne({where : {id}});
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} panier`;
+  async findAll(): Promise<Panier[]> {
+    return await this.panierRepository.find();
   }
 
-  update(id: number, updatePanierDto: UpdatePanierDto) {
-    return `This action updates a #${id} panier`;
+  async update(id: number, panier: Partial<Panier>): Promise<Panier> {
+    await this.panierRepository.update(id, panier);
+    return await this.panierRepository.findOne({where : {id}});
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} panier`;
+  async delete(id: number): Promise<void> {
+    await this.panierRepository.delete(id);
   }
+
 }
+

@@ -1,34 +1,37 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Put, Param, Delete } from '@nestjs/common';
+import { Categorie } from './entities/categorie.entity';
 import { CategorieService } from './categorie.service';
-import { CreateCategorieDto } from './dto/create-categorie.dto';
-import { UpdateCategorieDto } from './dto/update-categorie.dto';
-
-@Controller('categorie')
+import { Produit } from 'src/produit/entities/produit.entity';
+@Controller('categories')
 export class CategorieController {
   constructor(private readonly categorieService: CategorieService) {}
 
   @Post()
-  create(@Body() createCategorieDto: CreateCategorieDto) {
-    return this.categorieService.create(createCategorieDto);
+  async create(@Body() categorie: Categorie): Promise<Categorie> {
+    return await this.categorieService.create(categorie);
   }
 
   @Get()
-  findAll() {
-    return this.categorieService.findAll();
+  async findAll(): Promise<Categorie[]> {
+    return await this.categorieService.findAll();
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.categorieService.findOne(+id);
+  async findOne(@Param('id') id: string): Promise<Categorie> {
+    return await this.categorieService.findOne(parseInt(id));
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateCategorieDto: UpdateCategorieDto) {
-    return this.categorieService.update(+id, updateCategorieDto);
+  @Put(':id')
+  async update(@Param('id') id: string, @Body() categorie: Categorie): Promise<Categorie> {
+    return await this.categorieService.update(parseInt(id), categorie);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.categorieService.remove(+id);
+  async remove(@Param('id') id: string): Promise<void> {
+    return await this.categorieService.remove(parseInt(id));
   }
+
+ 
+
+
 }

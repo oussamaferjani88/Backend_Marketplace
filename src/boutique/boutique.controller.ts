@@ -1,34 +1,31 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Put, Delete, Body, Param } from '@nestjs/common';
 import { BoutiqueService } from './boutique.service';
-import { CreateBoutiqueDto } from './dto/create-boutique.dto';
-import { UpdateBoutiqueDto } from './dto/update-boutique.dto';
+import { Boutique } from './entities/boutique.entity';
 
 @Controller('boutique')
 export class BoutiqueController {
   constructor(private readonly boutiqueService: BoutiqueService) {}
 
   @Post()
-  create(@Body() createBoutiqueDto: CreateBoutiqueDto) {
-    return this.boutiqueService.create(createBoutiqueDto);
-  }
-
-  @Get()
-  findAll() {
-    return this.boutiqueService.findAll();
+  async createBoutique(@Body() data: Partial<Boutique>): Promise<Boutique> {
+    return await this.boutiqueService.createBoutique(data);
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.boutiqueService.findOne(+id);
+  async getBoutiqueById(@Param('id') id: number): Promise<Boutique> {
+    return await this.boutiqueService.getBoutiqueById(id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateBoutiqueDto: UpdateBoutiqueDto) {
-    return this.boutiqueService.update(+id, updateBoutiqueDto);
+  @Put(':id')
+  async updateBoutiqueById(
+    @Param('id') id: number,
+    @Body() data: Partial<Boutique>,
+  ): Promise<Boutique> {
+    return await this.boutiqueService.updateBoutiqueById(id, data);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.boutiqueService.remove(+id);
+  async deleteBoutiqueById(@Param('id') id: number): Promise<void> {
+    await this.boutiqueService.deleteBoutiqueById(id);
   }
 }

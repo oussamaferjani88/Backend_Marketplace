@@ -1,26 +1,31 @@
 import { Injectable } from '@nestjs/common';
-import { CreateBoutiqueDto } from './dto/create-boutique.dto';
-import { UpdateBoutiqueDto } from './dto/update-boutique.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { Boutique } from './entities/boutique.entity';
 
 @Injectable()
 export class BoutiqueService {
-  create(createBoutiqueDto: CreateBoutiqueDto) {
-    return 'This action adds a new boutique';
+  constructor(
+    @InjectRepository(Boutique)
+    private readonly boutiqueRepository: Repository<Boutique>,
+  ) {}
+
+  async createBoutique(data: Partial<Boutique>): Promise<Boutique> {
+    return await this.boutiqueRepository.save(data);
   }
 
-  findAll() {
-    return `This action returns all boutique`;
+  async getBoutiqueById(id: number): Promise<Boutique> {
+    return await this.boutiqueRepository.findOne(  { where  : {id},
+      relations: ['produits', 'evaluations', 'categorie'],
+    });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} boutique`;
+  async updateBoutiqueById(id: number, data: Partial<Boutique>): Promise<Boutique> {
+    await this.boutiqueRepository.update(id, data);
+    return await this.getBoutiqueById(id);
   }
 
-  update(id: number, updateBoutiqueDto: UpdateBoutiqueDto) {
-    return `This action updates a #${id} boutique`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} boutique`;
+  async deleteBoutiqueById(id: number): Promise<void> {
+    await this.boutiqueRepository.delete(id);
   }
 }

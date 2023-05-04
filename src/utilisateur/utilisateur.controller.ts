@@ -1,34 +1,36 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
 import { UtilisateurService } from './utilisateur.service';
-import { CreateUtilisateurDto } from './dto/create-utilisateur.dto';
-import { UpdateUtilisateurDto } from './dto/update-utilisateur.dto';
+import { Utilisateur } from './entities/utilisateur.entity';
 
 @Controller('utilisateur')
 export class UtilisateurController {
   constructor(private readonly utilisateurService: UtilisateurService) {}
 
-  @Post()
-  create(@Body() createUtilisateurDto: CreateUtilisateurDto) {
-    return this.utilisateurService.create(createUtilisateurDto);
-  }
-
   @Get()
-  findAll() {
+  async findAll(): Promise<Utilisateur[]> {
     return this.utilisateurService.findAll();
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.utilisateurService.findOne(+id);
+  async findOne(@Param('id') id: number): Promise<Utilisateur> {
+    return this.utilisateurService.findOne(id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateUtilisateurDto: UpdateUtilisateurDto) {
-    return this.utilisateurService.update(+id, updateUtilisateurDto);
+  @Post()
+  async create(@Body() utilisateur: Partial<Utilisateur>): Promise<Utilisateur> {
+    return this.utilisateurService.create(utilisateur);
+  }
+
+  @Put(':id')
+  async update(
+    @Param('id') id: number,
+    @Body() utilisateur: Partial<Utilisateur>,
+  ): Promise<Utilisateur> {
+    return this.utilisateurService.update(id, utilisateur);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.utilisateurService.remove(+id);
+  async remove(@Param('id') id: number): Promise<void> {
+    return this.utilisateurService.remove(id);
   }
 }

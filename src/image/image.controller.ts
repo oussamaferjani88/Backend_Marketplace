@@ -1,34 +1,33 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post } from '@nestjs/common';
 import { ImageService } from './image.service';
-import { CreateImageDto } from './dto/create-image.dto';
-import { UpdateImageDto } from './dto/update-image.dto';
+import { Image } from './entities/image.entity';
 
-@Controller('image')
+@Controller('images')
 export class ImageController {
   constructor(private readonly imageService: ImageService) {}
 
   @Post()
-  create(@Body() createImageDto: CreateImageDto) {
-    return this.imageService.create(createImageDto);
+  async create(@Body() image: Partial<Image>): Promise<Image> {
+    return await this.imageService.create(image);
   }
 
   @Get()
-  findAll() {
-    return this.imageService.findAll();
+  async findAll(): Promise<Image[]> {
+    return await this.imageService.findAll();
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.imageService.findOne(+id);
+  async findOne(@Param('id', ParseIntPipe) id: number): Promise<Image> {
+    return await this.imageService.findOne(id);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateImageDto: UpdateImageDto) {
-    return this.imageService.update(+id, updateImageDto);
+  async update(@Param('id', ParseIntPipe) id: number, @Body() image: Partial<Image>): Promise<Image> {
+    return await this.imageService.update(id, image);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.imageService.remove(+id);
+  async remove(@Param('id', ParseIntPipe) id: number): Promise<void> {
+    return await this.imageService.remove(id);
   }
 }
