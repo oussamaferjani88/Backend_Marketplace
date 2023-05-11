@@ -2,13 +2,14 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Utilisateur } from './entities/utilisateur.entity';
-
+import { CreateUtilisateurDto } from './dto/create-utilisateur.dto';
 @Injectable()
 export class UtilisateurService {
   constructor(
     @InjectRepository(Utilisateur)
     private readonly utilisateurRepository: Repository<Utilisateur>,
   ) {}
+  
 
   async findAll(): Promise<Utilisateur[]> {
     return this.utilisateurRepository.find();
@@ -18,8 +19,23 @@ export class UtilisateurService {
     return this.utilisateurRepository.findOne({where : {id}});
   }
 
-  async create(utilisateur: Partial<Utilisateur>): Promise<Utilisateur> {
-    return this.utilisateurRepository.save(utilisateur);
+  // async create(utilisateur: Partial<Utilisateur>): Promise<Utilisateur> {
+  //   return this.utilisateurRepository.save(utilisateur);
+  // }
+
+
+  async create(utilisateur: CreateUtilisateurDto): Promise<Utilisateur> {
+    console.log('creating utilisateur:', utilisateur);
+    try {
+      const newUtilisateur = this.utilisateurRepository.create(utilisateur);
+      console.log('new utilisateur:', newUtilisateur);
+      const createdUtilisateur = await this.utilisateurRepository.save(newUtilisateur);
+      console.log('created utilisateur:', createdUtilisateur);
+      return createdUtilisateur;
+    } catch (error) {
+      console.error('error creating utilisateur:', error);
+      throw error;
+    }
   }
 
   async update(

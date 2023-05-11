@@ -13,28 +13,28 @@ export class Utilisateur {
     id : number ; 
 
     @Column()
-    nom : string ; 
+    nom_complet : string ; 
 
 
     @Column()
     email : string ; 
 
     @Column()
-    motdepasse : string ; 
+    password : string ; 
 
-    @Column()
+    @Column({ nullable: true })
     num_tlf : string ; 
 
-    @Column()
+    @Column({ nullable: true })
     localisation : string ; 
 
-    @Column()
+    @Column({ nullable: true })
     pdp : string ; 
 
-    @Column() 
+    @Column({ nullable: true }) 
     est_interdit : boolean ;
 
-    @Column()
+    @Column({ nullable: true })
     note : number ;
     
    @OneToMany((type) => Evaluation, (evaluation) => evaluation.utilisateur)

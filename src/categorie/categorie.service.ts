@@ -2,17 +2,18 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Categorie } from './entities/categorie.entity';
-
+import { CreateCategorieDto } from './dto/create-categorie.dto';
+import { UpdateCategorieDto } from './dto/update-categorie.dto';
 @Injectable()
 export class CategorieService {
   constructor(
     @InjectRepository(Categorie)
-    private readonly categorieRepository: Repository<Categorie>,
+    private  categorieRepository: Repository<Categorie>,
 
   ) {}
 
-  async create(categorie: Categorie): Promise<Categorie> {
-    return await this.categorieRepository.save(categorie);
+   create(CreateCategorieDto: CreateCategorieDto){
+    return  this.categorieRepository.save(CreateCategorieDto);
   }
 
   async findAll(): Promise<Categorie[]> {

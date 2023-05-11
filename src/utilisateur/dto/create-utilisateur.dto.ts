@@ -1,8 +1,8 @@
 export class CreateUtilisateurDto {
 
-    nom : string ; 
+    nom_complet : string ; 
     email : string ; 
-    motdepasse : string ; 
+    password : string ; 
     num_tlf : string ; 
     localisation : string ; 
     pdp : string ; 
