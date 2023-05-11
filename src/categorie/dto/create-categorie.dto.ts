@@ -1,4 +1,4 @@
-export class CreateCategorieDto {
+export class CreateCategorieDto 
+{
     nomCat : string;
-    
 }

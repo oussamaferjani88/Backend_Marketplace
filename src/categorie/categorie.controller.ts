@@ -1,14 +1,14 @@
 import { Controller, Get, Post, Body, Put, Param, Delete } from '@nestjs/common';
 import { Categorie } from './entities/categorie.entity';
 import { CategorieService } from './categorie.service';
-import { Produit } from 'src/produit/entities/produit.entity';
+//import { Produit } from 'src/produit/entities/produit.entity';
 @Controller('categories')
 export class CategorieController {
-  constructor(private readonly categorieService: CategorieService) {}
+  constructor(private categorieService: CategorieService) {}
 
   @Post()
-  async create(@Body() categorie: Categorie): Promise<Categorie> {
-    return await this.categorieService.create(categorie);
+  async create(@Body() categorie: Partial<Categorie>): Promise<Categorie> {
+    return this.categorieService.create(categorie);
   }
 
   @Get()

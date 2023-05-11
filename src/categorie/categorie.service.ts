@@ -7,12 +7,12 @@ import { Categorie } from './entities/categorie.entity';
 export class CategorieService {
   constructor(
     @InjectRepository(Categorie)
-    private readonly categorieRepository: Repository<Categorie>,
+    private categorieRepository: Repository<Categorie>,
 
   ) {}
 
-  async create(categorie: Categorie): Promise<Categorie> {
-    return await this.categorieRepository.save(categorie);
+  async create(categorie: Partial<Categorie>): Promise<Categorie> {
+    return this.categorieRepository.save(categorie);
   }
 
   async findAll(): Promise<Categorie[]> {
@@ -22,6 +22,7 @@ export class CategorieService {
   async findOne(id: number): Promise<Categorie> {
     return await this.categorieRepository.findOne( { where: { id },  relations: ['boutiques', 'sousCategories' , 'produits'] });
   }
+  
   
 
   async update(id: number, categorie: Categorie): Promise<Categorie> {
