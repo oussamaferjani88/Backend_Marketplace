@@ -8,6 +8,6 @@ import { Repository } from 'typeorm';
 @Module({
   imports: [TypeOrmModule.forFeature([Categorie])],
   controllers: [CategorieController],
-  providers: [CategorieService]
+  providers: [CategorieService],
 })
 export class CategorieModule {}

@@ -2,17 +2,19 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Categorie } from './entities/categorie.entity';
+import { CreateCategorieDto } from './dto/create-categorie.dto';
+import { UpdateCategorieDto } from './dto/update-categorie.dto';
 
 @Injectable()
 export class CategorieService {
   constructor(
     @InjectRepository(Categorie)
-    private categorieRepository: Repository<Categorie>,
+    private  categorieRepository: Repository<Categorie>,
 
   ) {}
 
-  async create(categorie: Partial<Categorie>): Promise<Categorie> {
-    return this.categorieRepository.save(categorie);
+   create(CreateCategorieDto: CreateCategorieDto){
+    return  this.categorieRepository.save(CreateCategorieDto);
   }
 
   async findAll(): Promise<Categorie[]> {
@@ -22,7 +24,6 @@ export class CategorieService {
   async findOne(id: number): Promise<Categorie> {
     return await this.categorieRepository.findOne( { where: { id },  relations: ['boutiques', 'sousCategories' , 'produits'] });
   }
-  
   
 
   async update(id: number, categorie: Categorie): Promise<Categorie> {

@@ -1,6 +1,7 @@
 import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
 import { UtilisateurService } from './utilisateur.service';
 import { Utilisateur } from './entities/utilisateur.entity';
+import { UtilisateurDto } from './dto/utilisateur.dto';
 
 @Controller('utilisateur')
 export class UtilisateurController {
@@ -13,13 +14,23 @@ export class UtilisateurController {
 
   @Get(':id')
   async findOne(@Param('id') id: number): Promise<Utilisateur> {
-    return this.utilisateurService.findOne(id);
+    return this.utilisateurService.findOneId(id);
   }
 
+ 
   @Post()
-  async create(@Body() utilisateur: Partial<Utilisateur>): Promise<Utilisateur> {
-    return this.utilisateurService.create(utilisateur);
+  async create(@Body() utilisateur: UtilisateurDto): Promise<Utilisateur> {
+    console.log('creating utilisateur:', utilisateur);
+    try {
+      const createdUtilisateur = await this.utilisateurService.create(utilisateur);
+      console.log('created utilisateur:', createdUtilisateur);
+      return createdUtilisateur;
+    } catch (error) {
+      console.error('error creating utilisateur:', error);
+      throw error;
+    }
   }
+
 
   @Put(':id')
   async update(
