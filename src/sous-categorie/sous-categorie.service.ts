@@ -51,4 +51,8 @@ export class SousCategorieService {
   async remove(id: number): Promise<void> {
     await this.sousCategorieRepository.delete(id);
   }
+  async findSousCategoriesByCategorie(categorieId: number): Promise<SousCategorie[]> {
+    return await this.sousCategorieRepository.find({ where: { categorie: { id: categorieId } }, relations: ['produits'] });
+  }
+  
 }

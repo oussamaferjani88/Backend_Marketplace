@@ -38,4 +38,12 @@ export class SousCategorieController {
   async remove(@Param('id') id: string): Promise<void> {
     return await this.sousCategorieService.remove(parseInt(id));
   }
+  @Get('categorie/:categorieId')
+  async findSousCategoriesByCategorie(@Param('categorieId') categorieId: string): Promise<SousCategorie[]> {
+    return await this.sousCategorieService.findSousCategoriesByCategorie(parseInt(categorieId));
+  }
+
+
+
+
 }

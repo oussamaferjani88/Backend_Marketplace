@@ -26,11 +26,11 @@ export class CategorieService {
   }
 
   async findAll(): Promise<Categorie[]> {
-    return await this.categorieRepository.find({ relations: ['boutiques', 'sousCategories' , 'produits'] });
+    return await this.categorieRepository.find({ relations: ['boutiques', 'sousCategories' ] });
   }
 
   async findOne(id: number): Promise<Categorie> {
-    return await this.categorieRepository.findOne( { where: { id },  relations: ['boutiques', 'sousCategories' , 'produits'] });
+    return await this.categorieRepository.findOne( { where: { id },  relations: ['boutiques', 'sousCategories' ] });
   }
   
 
