@@ -12,9 +12,17 @@ export class CategorieService {
     private  categorieRepository: Repository<Categorie>,
 
   ) {}
-
-   create(CreateCategorieDto: CreateCategorieDto){
+  async findOneName(nomCat: string): Promise<Categorie> {
+    return await this.categorieRepository.findOne({where: {nomCat : nomCat}});
+  }
+  async create(CreateCategorieDto: CreateCategorieDto){
+    const catExists = await this.findOneName(CreateCategorieDto.nomCat);
+    if (catExists) {
+      console.error("Catégorie exist déja !");
+    }
+    else {
     return  this.categorieRepository.save(CreateCategorieDto);
+    }
   }
 
   async findAll(): Promise<Categorie[]> {

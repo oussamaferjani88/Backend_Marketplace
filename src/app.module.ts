@@ -40,7 +40,7 @@ import { MulterModule } from '@nestjs/platform-express';
       host: '127.0.0.1',
       port: 5432,
       username: 'postgres',
-      password: '1234',
+      password: 'oussama',
       database: 'marketplace',
       autoLoadEntities: true,
       synchronize: true,

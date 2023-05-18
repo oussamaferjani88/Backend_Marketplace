@@ -14,7 +14,7 @@ export class Categorie {
     nomCat : string;
 
 
-    @OneToMany(() =>Boutique ,  boutique => boutique.categorie )
+    @OneToMany(() =>Boutique ,  boutique => boutique.categorie /*, { nullable: true }*/ )
     boutiques : Boutique[];
 
     

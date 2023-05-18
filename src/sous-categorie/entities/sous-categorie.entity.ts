@@ -15,8 +15,9 @@ id : number ;
 nomSc : string;
 
 
-@OneToMany((type) => Produit, (produit) => produit.sousCategorie)
+@OneToMany((type) => Produit, (produit) => produit.sousCategorie  /*, { nullable: true }*/      )
 produits: Produit[];
+
   
 @ManyToOne((type) => Categorie, (categorie) => categorie.sousCategories)
 categorie: Categorie;

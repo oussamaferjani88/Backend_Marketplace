@@ -10,8 +10,18 @@ export class SousCategorieService {
     private readonly sousCategorieRepository: Repository<SousCategorie>,
   ) {}
 
+  async findOneName(nomSc: string): Promise<SousCategorie> {
+    return await this.sousCategorieRepository.findOne({where: {nomSc : nomSc}});
+  }
+
   async create(sousCategorie: SousCategorie): Promise<SousCategorie> {
+    const sousCatExists = await this.findOneName(sousCategorie.nomSc);
+    if (sousCatExists) {
+      console.error("Sous Catégorie exist déja !");
+    }
+    else {
     return await this.sousCategorieRepository.save(sousCategorie);
+    }
   }
 
   async findAll(): Promise<SousCategorie[]> {
