@@ -1,7 +1,6 @@
 import { Boutique } from "src/boutique/entities/boutique.entity";
 import { Evaluation } from "src/evaluation/entities/evaluation.entity";
 import { Message } from "src/message/entities/message.entity";
-import { Panier } from "src/panier/entities/panier.entity";
 import { Signal } from "src/signal/entities/signal.entity";
 import {Entity , Column , PrimaryGeneratedColumn , ManyToMany ,OneToMany , ManyToOne , OneToOne } from "typeorm"
 
@@ -47,10 +46,6 @@ export class Utilisateur {
 
   @OneToMany((type) => Signal, (signal) => signal.utilisateur)
   signals: Signal[];
-
-
-  @OneToMany((type) => Panier, (panier) => panier.utilisateur)
-  paniers: Evaluation[];
 
   @OneToMany((type) => Message, message => message.expediteur)
   Messagesenvoyer : Message[];

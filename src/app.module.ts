@@ -4,7 +4,6 @@ import { AppController } from './app/app.controller';
 import { AppService } from './app/app.service';
 import { AdminModule } from './admin/admin.module';
 import { UtilisateurModule } from './utilisateur/utilisateur.module';
-import { PanierModule } from './panier/panier.module';
 import { EvaluationModule } from './evaluation/evaluation.module';
 import { BoutiqueModule } from './boutique/boutique.module';
 import { CategorieModule } from './categorie/categorie.module';
@@ -23,7 +22,6 @@ import { MulterModule } from '@nestjs/platform-express';
 
     AdminModule,
     UtilisateurModule,
-    PanierModule,
     EvaluationModule,
     BoutiqueModule,
     CategorieModule,

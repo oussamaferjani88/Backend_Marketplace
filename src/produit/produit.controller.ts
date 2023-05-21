@@ -1,6 +1,6 @@
 import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put } from '@nestjs/common';
 import { ProduitService } from './produit.service';
-import { CreateProduitDto } from './dto/create-produit.dto';
+import { ProduitDto } from './dto/produit.dto';
 import { UpdateProduitDto } from './dto/update-produit.dto';
 import { Produit } from './entities/produit.entity';
 
@@ -9,7 +9,7 @@ export class ProduitController {
   constructor(private readonly produitService: ProduitService) {}
 
   @Post()
-  create(@Body() createProduitDto: CreateProduitDto): Promise<Produit> {
+  create(@Body() createProduitDto: ProduitDto): Promise<Produit> {
     return this.produitService.create(createProduitDto);
   }
 

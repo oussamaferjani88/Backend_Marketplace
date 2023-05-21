@@ -1,6 +1,5 @@
 import { Categorie } from "src/categorie/entities/categorie.entity";
 import { Produit } from "src/produit/entities/produit.entity";
-import { Utilisateur } from "src/utilisateur/entities/utilisateur.entity";
 import {Entity , Column , PrimaryGeneratedColumn , ManyToMany ,OneToMany , ManyToOne , OneToOne , JoinColumn } from "typeorm"
 
 

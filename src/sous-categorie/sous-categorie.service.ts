@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { SousCategorie } from './entities/sous-categorie.entity';
 import { Produit } from 'src/produit/entities/produit.entity';
+
 @Injectable()
 export class SousCategorieService {
   constructor(
@@ -11,16 +12,17 @@ export class SousCategorieService {
   ) {}
 
   async findOneName(nomSc: string): Promise<SousCategorie> {
-    return await this.sousCategorieRepository.findOne({where: {nomSc : nomSc}});
+    return await this.sousCategorieRepository.findOne({
+      where: { nomSc: nomSc },
+    });
   }
 
   async create(sousCategorie: SousCategorie): Promise<SousCategorie> {
     const sousCatExists = await this.findOneName(sousCategorie.nomSc);
     if (sousCatExists) {
-      console.error("Sous Catégorie exist déja !");
-    }
-    else {
-    return await this.sousCategorieRepository.save(sousCategorie);
+      console.error('Sous Catégorie exist déja !');
+    } else {
+      return await this.sousCategorieRepository.save(sousCategorie);
     }
   }
 
@@ -28,7 +30,9 @@ export class SousCategorieService {
     return await this.sousCategorieRepository.find({ relations: ['produits'] });
   }
 
-  async findProduitsBySousCategorie(sousCategorieId: number): Promise<Produit[]> {
+  async findProduitsBySousCategorie(
+    sousCategorieId: number,
+  ): Promise<Produit[]> {
     return await this.sousCategorieRepository
       .createQueryBuilder('sousCategorie')
       .leftJoinAndSelect('sousCategorie.produits', 'produit')
@@ -36,23 +40,28 @@ export class SousCategorieService {
       .getMany()
       .then((sousCategorie: SousCategorie[]) => sousCategorie[0].produits);
   }
-  
-  
 
   async findOne(id: number): Promise<SousCategorie> {
-    return await this.sousCategorieRepository.findOne({where: {id: id, }});
+    return await this.sousCategorieRepository.findOne({ where: { id: id } });
   }
 
-  async update(id: number, sousCategorie: SousCategorie): Promise<SousCategorie> {
+  async update(
+    id: number,
+    sousCategorie: SousCategorie,
+  ): Promise<SousCategorie> {
     await this.sousCategorieRepository.update(id, sousCategorie);
-    return await this.sousCategorieRepository.findOne({where: {id: id, }});
+    return await this.sousCategorieRepository.findOne({ where: { id: id } });
   }
 
   async remove(id: number): Promise<void> {
     await this.sousCategorieRepository.delete(id);
   }
-  async findSousCategoriesByCategorie(categorieId: number): Promise<SousCategorie[]> {
-    return await this.sousCategorieRepository.find({ where: { categorie: { id: categorieId } }, relations: ['produits'] });
+  async findSousCategoriesByCategorie(
+    categorieId: number,
+  ): Promise<SousCategorie[]> {
+    return await this.sousCategorieRepository.find({
+      where: { categorie: { id: categorieId } },
+      relations: ['produits'],
+    });
   }
-  
 }
