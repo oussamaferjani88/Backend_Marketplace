@@ -16,10 +16,10 @@ import { VideoModule } from './video/video.module';
 import { AuthModule } from './auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
 import { MulterModule } from '@nestjs/platform-express';
+import { MailModule } from './mail/mail.module';
 
 @Module({
   imports: [
-
     AdminModule,
     UtilisateurModule,
     EvaluationModule,
@@ -38,17 +38,16 @@ import { MulterModule } from '@nestjs/platform-express';
       host: '127.0.0.1',
       port: 5432,
       username: 'postgres',
-      password: 'oussama',
+      password: 'karem',
       database: 'marketplace',
       autoLoadEntities: true,
       synchronize: true,
       entities: ['dist/**/*.entity.js'],
-
     }),
     MulterModule.register({
       dest: './uploads',
     }),
-
+    MailModule,
   ],
   controllers: [AppController],
   providers: [AppService],
