@@ -1,3 +1,4 @@
+import { Utilisateur } from 'src/utilisateur/entities/utilisateur.entity';
 import { Boutique } from 'src/boutique/entities/boutique.entity';
 import { Image } from 'src/image/entities/image.entity';
 import { Signal } from 'src/signal/entities/signal.entity';
@@ -37,12 +38,15 @@ export class Produit {
   @Column({ nullable: true })
   date_v: Date;
 
-  @ManyToMany(() => Boutique, (boutique) => boutique.produits)
-  @JoinTable()
-  boutiques: Boutique[];
+  @ManyToOne(() => Utilisateur, utilisateur => utilisateur.produits)
+  utilisateur: Utilisateur;
 
   @ManyToOne((type) => SousCategorie, (sousCategorie) => sousCategorie.produits /*, { nullable: true }*/ )
   sousCategorie: SousCategorie;
+
+  @ManyToMany(() => Boutique, (boutique) => boutique.produits)
+  @JoinTable()
+  boutiques: Boutique[];
 
   @OneToMany(() => Signal, (signal) => signal.produit /*, { nullable: true }*/ )
   signals: Signal[];

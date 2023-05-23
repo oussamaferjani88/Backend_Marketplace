@@ -24,16 +24,36 @@ export class ProduitService {
   }
 
   async findAll(): Promise<Produit[]> {
-    return await this.produitRepository.find({ relations: ['boutiques', 'sousCategorie', 'categorie', 'images', 'videos'] });
+    return await this.produitRepository.find({
+      relations: [
+        'boutiques',
+        'sousCategorie',
+        'categorie',
+        'images',
+        'videos',
+      ],
+    });
   }
 
   async findOne(id: number): Promise<Produit> {
-    return await this.produitRepository.findOne( { where: { id }, relations: ['boutiques', 'sousCategorie', 'categorie', 'images', 'videos'] });
+    return await this.produitRepository.findOne({
+      where: { id },
+      relations: [
+        'boutiques',
+        'sousCategorie',
+        'categorie',
+        'images',
+        'videos',
+      ],
+    });
   }
 
-  async update(id: number, updateProduitDto: UpdateProduitDto): Promise<Produit> {
+  async update(
+    id: number,
+    updateProduitDto: UpdateProduitDto,
+  ): Promise<Produit> {
     await this.produitRepository.update(id, updateProduitDto);
-    return await this.produitRepository.findOne({where: {id: id, }});
+    return await this.produitRepository.findOne({ where: { id: id } });
   }
 
   async remove(id: number): Promise<void> {
@@ -46,8 +66,30 @@ export class ProduitService {
       .leftJoinAndSelect('produit.boutiques', 'boutique')
       .leftJoinAndSelect('produit.sousCategorie', 'sousCategorie')
       .leftJoinAndSelect('produit.categorie', 'categorie')
-      .where('categorie.id = :id', { id: categorieId })
+      .where('categorie.id = :id', { id : categorieId })
       .getMany();
   }
-  
+
+  async findProduitBySousCategorie(sousCategorieId: number) : Promise<Produit[]> {
+    return this.produitRepository
+      .createQueryBuilder('produit')
+      .leftJoinAndSelect('produit.SousCategorie', 'sousCategorie')
+      .where('sousCategorie.id = :id', { id : sousCategorieId })
+      .getMany();
+  }
+
+  async findProduitByUtilisateur(userId: number) : Promise<Produit[]> {
+    return this.produitRepository
+      .createQueryBuilder('produit')
+      .leftJoinAndSelect('produit.utilisateur', 'utilisateur')
+      .where('utilisateur.id = :id', { id : userId })
+      .getMany();
+  }
+
+  async findProductByName(name: string) : Promise<Produit[]> {
+    return this.produitRepository
+      .createQueryBuilder('produit')
+      .where('produit.nomP ILIKE :name', { name: `%${name}%` })
+      .getMany();
+  }
 }
