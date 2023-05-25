@@ -15,6 +15,9 @@ export class CategorieService {
   async findOneName(nomCat: string): Promise<Categorie> {
     return await this.categorieRepository.findOne({where: {nomCat : nomCat}});
   }
+
+
+
   async create(CreateCategorieDto: CreateCategorieDto){
     const catExists = await this.findOneName(CreateCategorieDto.nomCat);
     if (catExists) {
@@ -30,7 +33,7 @@ export class CategorieService {
   }
 
   async findOne(id: number): Promise<Categorie> {
-    return await this.categorieRepository.findOne( { where: { id },  relations: ['boutiques', 'sousCategories' ] });
+    return this.categorieRepository.findOne( { where: { id },  relations: [ 'sousCategories' ] });
   }
   
 
@@ -43,7 +46,13 @@ export class CategorieService {
     await this.categorieRepository.delete(id);
   }
 
- 
+  // async uploadCoverImage(coverImage: string, id: number) {
+  //   return this.categorieRepository.update(id, { coverImage: coverImage });
+  // }
 
-
+  async uploadCoverImage(coverImage: string, id: number) {
+    console.log("coverImage :",coverImage);
+    return this.categorieRepository.update(id, { coverImage: coverImage });
+  }
+  
 }
