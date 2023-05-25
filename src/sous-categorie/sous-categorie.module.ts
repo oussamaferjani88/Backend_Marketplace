@@ -1,17 +1,16 @@
 import { Module } from '@nestjs/common';
-import { SousCategorieService } from './sous-categorie.service';
-import { SousCategorieController } from './sous-categorie.controller';
-import { SousCategorie } from './entities/sous-categorie.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { SousCategorieController } from './sous-categorie.controller';
+import { SousCategorieService } from './sous-categorie.service';
+import { SousCategorie } from './entities/sous-categorie.entity';
 import { Categorie } from 'src/categorie/entities/categorie.entity';
-@Module({
-<<<<<<< HEAD
-  imports: [TypeOrmModule.forFeature([SousCategorie , Categorie])],
+import { CategorieService } from 'src/categorie/categorie.service';
 
-=======
-  imports: [TypeOrmModule.forFeature([SousCategorie])],
->>>>>>> d74856cac1691a0fa9a471dd8ad01ce1e286eae0
+@Module({
+  imports: [
+    TypeOrmModule.forFeature([SousCategorie, Categorie]), // Import both SousCategorie and Categorie entities
+  ],
   controllers: [SousCategorieController],
-  providers: [SousCategorieService]
+  providers: [SousCategorieService, CategorieService], // Provide the SousCategorieService and CategorieService
 })
 export class SousCategorieModule {}
