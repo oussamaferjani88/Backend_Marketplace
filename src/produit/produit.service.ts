@@ -2,14 +2,22 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ProduitDto } from './dto/produit.dto';
+import { VideoDto } from '../video/dto/video.dto';
+import { ImageDto } from '../image/dto/image.dto';
 import { UpdateProduitDto } from './dto/update-produit.dto';
 import { Produit } from './entities/produit.entity';
+import { Video } from '../video/entities/video.entity';
+import { Image } from '../image/entities/image.entity';
 
 @Injectable()
 export class ProduitService {
   constructor(
     @InjectRepository(Produit)
-    private readonly produitRepository: Repository<Produit>,
+    private readonly produitRepository : Repository<Produit>,
+    @InjectRepository(Video)
+    private readonly videoRepository : Repository<Video>,
+    @InjectRepository(Image)
+    private readonly imageRepository : Repository<Image>
   ) {}
 
   async create(produitDto: ProduitDto): Promise<Produit> {
@@ -35,13 +43,12 @@ export class ProduitService {
     });
   }
 
-  async findOne(id: number): Promise<Produit> {
+  async findOneId(produitId: number): Promise<Produit> {
     return await this.produitRepository.findOne({
-      where: { id },
+      where: { id : produitId },
       relations: [
         'boutiques',
         'sousCategorie',
-        'categorie',
         'images',
         'videos',
       ],
@@ -60,12 +67,40 @@ export class ProduitService {
     await this.produitRepository.delete(id);
   }
 
+  async uploadImages(imageDto: ImageDto, produitId: number) {
+    
+    const produit = await this.findOneId(produitId);
+
+    // Initialize images array
+    produit.images = [];
+
+    let createdImage = await this.imageRepository.create(imageDto);
+    produit.images.push(createdImage);
+    return await this.produitRepository.save(produit);
+  }
+
+  async uploadVideos(videoDto: VideoDto, produitId: number) {
+    const produit = await this.findOneId(produitId);
+    produit.videos = [];
+    console.log('videos [] : ' , produit.videos )
+
+    // Create video based on the VideoDto
+    const createdVideo = this.videoRepository.create(videoDto);
+    console.log('createdVideo : ' , createdVideo )
+    // Add created video to the videos array of produit
+    produit.videos.push(createdVideo);
+    console.log('produit' , produit);
+    // Save updated produit with the added video
+    return await this.produitRepository.save(produit);
+
+  }
+
   async findProduitByCategorie(categorieId: number): Promise<Produit[]> {
     return await this.produitRepository
       .createQueryBuilder('produit')
       .leftJoinAndSelect('produit.boutiques', 'boutique')
       .leftJoinAndSelect('produit.sousCategorie', 'sousCategorie')
-      .leftJoinAndSelect('produit.categorie', 'categorie')
+      .leftJoinAndSelect('souCategorie.categorie', 'categorie')
       .where('categorie.id = :id', { id : categorieId })
       .getMany();
   }
@@ -86,7 +121,7 @@ export class ProduitService {
       .getMany();
   }
 
-  async findProductByName(name: string) : Promise<Produit[]> {
+  async findProduitByName(name: string) : Promise<Produit[]> {
     return this.produitRepository
       .createQueryBuilder('produit')
       .where('produit.nomP ILIKE :name', { name: `%${name}%` })

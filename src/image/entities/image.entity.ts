@@ -9,7 +9,10 @@ export class Image {
 
 
     @Column()
-    nom_image : string;
+    nomImg : string;
+
+    @Column()
+    fileName : string;
 
 
 

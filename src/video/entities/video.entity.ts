@@ -14,6 +14,9 @@ export class Video {
   @Column()
   nomV: string;
 
+  @Column()
+  fileName: string;
+
   @ManyToOne((type) => Produit, (produit) => produit.videos)
   produit: Produit;
 }

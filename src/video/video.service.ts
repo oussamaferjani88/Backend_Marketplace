@@ -16,7 +16,7 @@ export class VideoService {
     return this.videoRepository.save(video);
   }
 
-  async getVideosByProduitId(produitId: number): Promise<Video[]> {
+  async findVideosByProduitId(produitId: number): Promise<Video[]> {
     return this.videoRepository
       .createQueryBuilder('video')
       .leftJoinAndSelect('video.produit', 'produit')
