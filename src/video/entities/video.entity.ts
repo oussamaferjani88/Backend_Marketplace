@@ -1,17 +1,22 @@
-import { Produit } from "src/produit/entities/produit.entity";
-import {Entity , Column , PrimaryGeneratedColumn , ManyToMany ,OneToMany , ManyToOne , OneToOne } from "typeorm"
+import { Produit } from 'src/produit/entities/produit.entity';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  ManyToOne
+} from 'typeorm';
 
 @Entity()
 export class Video {
+  @PrimaryGeneratedColumn()
+  id: number;
 
-@PrimaryGeneratedColumn()
-id : number ; 
+  @Column()
+  nomV: string;
 
+  @Column()
+  fileName: string;
 
-@Column()
-nom_video : string ; 
-
-@ManyToOne((type) => Produit, (produit) => produit.videos)
-    produit: Produit;
-
+  @ManyToOne((type) => Produit, (produit) => produit.videos)
+  produit: Produit;
 }

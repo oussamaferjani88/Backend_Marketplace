@@ -1,13 +1,15 @@
 import { Controller, Get, Post, Body, Put, Param, Delete } from '@nestjs/common';
 import { Video } from './entities/video.entity';
 import { VideoService } from './video.service';
+import { VideoDto } from './dto/video.dto';
+
 
 @Controller('video')
 export class VideoController {
   constructor(private readonly videoService: VideoService) {}
 
   @Post()
-  create(@Body() video: Partial<Video>): Promise<Video> {
+  create(@Body() video: VideoDto): Promise<Video> {
     return this.videoService.create(video);
   }
 

@@ -4,7 +4,6 @@ import { AppController } from './app/app.controller';
 import { AppService } from './app/app.service';
 import { AdminModule } from './admin/admin.module';
 import { UtilisateurModule } from './utilisateur/utilisateur.module';
-import { PanierModule } from './panier/panier.module';
 import { EvaluationModule } from './evaluation/evaluation.module';
 import { BoutiqueModule } from './boutique/boutique.module';
 import { CategorieModule } from './categorie/categorie.module';
@@ -17,13 +16,12 @@ import { VideoModule } from './video/video.module';
 import { AuthModule } from './auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
 import { MulterModule } from '@nestjs/platform-express';
+import { MailModule } from './mail/mail.module';
 
 @Module({
   imports: [
-
     AdminModule,
     UtilisateurModule,
-    PanierModule,
     EvaluationModule,
     BoutiqueModule,
     CategorieModule,
@@ -45,12 +43,11 @@ import { MulterModule } from '@nestjs/platform-express';
       autoLoadEntities: true,
       synchronize: true,
       entities: ['dist/**/*.entity.js'],
-
     }),
     MulterModule.register({
       dest: './uploads',
     }),
-
+    MailModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -1,13 +1,15 @@
 import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post } from '@nestjs/common';
 import { ImageService } from './image.service';
 import { Image } from './entities/image.entity';
+import { ImageDto } from './dto/image.dto';
+
 
 @Controller('images')
 export class ImageController {
   constructor(private readonly imageService: ImageService) {}
 
   @Post()
-  async create(@Body() image: Partial<Image>): Promise<Image> {
+  async create(@Body() image: ImageDto): Promise<Image> {
     return await this.imageService.create(image);
   }
 
