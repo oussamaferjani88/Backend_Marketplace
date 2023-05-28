@@ -2,9 +2,16 @@ import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common'
 import { SousCategorie } from './entities/sous-categorie.entity';
 import { SousCategorieService } from './sous-categorie.service';
 import { Produit } from 'src/produit/entities/produit.entity';
+import { Categorie } from 'src/categorie/entities/categorie.entity';
+import { Repository } from 'typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
 @Controller('sous-categories')
 export class SousCategorieController {
-  constructor(private readonly sousCategorieService: SousCategorieService) {}
+  constructor(
+    private readonly sousCategorieService: SousCategorieService,
+    @InjectRepository(Categorie)
+    private readonly categorieRepository: Repository<Categorie>,
+  ) {}
 
   @Post()
   async create(@Body() sousCategorie: SousCategorie): Promise<SousCategorie> {
@@ -43,7 +50,29 @@ export class SousCategorieController {
     return await this.sousCategorieService.findSousCategoriesByCategorie(parseInt(categorieId));
   }
 
+ 
+   @Post('categorie/:categorieId')
+  async createWithCategorie(
+    @Param('categorieId') categorieId: string,
+    @Body() sousCategorie: SousCategorie,
+  ): Promise<SousCategorie> {
+    console.log('categorieId:', categorieId); // Log the value of categorieId
 
+    const parsedCategorieId: number = parseInt(categorieId);
+    console.log('parsedCategorieId:', parsedCategorieId); // Log the parsed value
+
+    const categorie: Categorie = await this.categorieRepository.findOne({ where: { id: parsedCategorieId } });
+    console.log('categorie:', categorie); // Log the retrieved categorie
+
+    if (!categorie) {
+      // Handle error if the categorieId does not exist
+      throw new Error('Invalid categorieId');
+    }
+
+    sousCategorie.categorie = categorie;
+
+    return await this.sousCategorieService.create(sousCategorie);
+  }
 
 
 }

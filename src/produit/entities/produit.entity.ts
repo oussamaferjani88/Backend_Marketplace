@@ -1,3 +1,4 @@
+import { Utilisateur } from 'src/utilisateur/entities/utilisateur.entity';
 import { Boutique } from 'src/boutique/entities/boutique.entity';
 import { Image } from 'src/image/entities/image.entity';
 import { Signal } from 'src/signal/entities/signal.entity';
@@ -37,19 +38,25 @@ export class Produit {
   @Column({ nullable: true })
   date_v: Date;
 
+  @ManyToOne(() => Utilisateur, (utilisateur) => utilisateur.produits)
+  utilisateur: Utilisateur;
+
+  @ManyToOne(
+    (type) => SousCategorie,
+    (sousCategorie) => sousCategorie.produits /*, { nullable: true }*/,
+  )
+  sousCategorie: SousCategorie;
+
   @ManyToMany(() => Boutique, (boutique) => boutique.produits)
   @JoinTable()
   boutiques: Boutique[];
 
-  @ManyToOne((type) => SousCategorie, (sousCategorie) => sousCategorie.produits /*, { nullable: true }*/ )
-  sousCategorie: SousCategorie;
-
-  @OneToMany(() => Signal, (signal) => signal.produit /*, { nullable: true }*/ )
+  @OneToMany(() => Signal, (signal) => signal.produit /*, { nullable: true }*/)
   signals: Signal[];
 
-  @OneToMany(() => Image, (image) => image.produit /*, { nullable: true }*/ )
+  @OneToMany(() => Image, (image) => image.produit, { cascade: true })
   images: Image[];
 
-  @OneToMany(() => Video, (video) => video.produit /*, { nullable: true }*/ )
+  @OneToMany(() => Video, (video) => video.produit, { cascade: true })
   videos: Video[];
 }

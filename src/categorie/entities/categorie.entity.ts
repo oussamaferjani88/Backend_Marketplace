@@ -1,6 +1,6 @@
 import { Boutique } from "src/boutique/entities/boutique.entity";
 import { SousCategorie } from "src/sous-categorie/entities/sous-categorie.entity";
-import {Entity , Column , PrimaryGeneratedColumn , ManyToMany ,OneToMany , ManyToOne , OneToOne } from "typeorm"
+import {Entity , Column , PrimaryGeneratedColumn , ManyToMany ,OneToMany , ManyToOne , OneToOne , } from "typeorm"
 
 
 
@@ -13,6 +13,8 @@ export class Categorie {
     @Column()
     nomCat : string;
 
+    @Column({ nullable: true })
+    coverImage: string;
 
     @OneToMany(() =>Boutique ,  boutique => boutique.categorie /*, { nullable: true }*/ )
     boutiques : Boutique[];
