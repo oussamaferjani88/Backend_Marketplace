@@ -24,16 +24,36 @@ export class ProduitService {
   }
 
   async findAll(): Promise<Produit[]> {
-    return await this.produitRepository.find({ relations: ['boutiques', 'sousCategorie', 'categorie', 'images', 'videos'] });
+    return await this.produitRepository.find({
+      relations: [
+        'boutiques',
+        'sousCategorie',
+        'categorie',
+        'images',
+        'videos',
+      ],
+    });
   }
 
   async findOne(id: number): Promise<Produit> {
-    return await this.produitRepository.findOne( { where: { id }, relations: ['boutiques', 'sousCategorie', 'categorie', 'images', 'videos'] });
+    return await this.produitRepository.findOne({
+      where: { id },
+      relations: [
+        'boutiques',
+        'sousCategorie',
+        'categorie',
+        'images',
+        'videos',
+      ],
+    });
   }
 
-  async update(id: number, updateProduitDto: UpdateProduitDto): Promise<Produit> {
+  async update(
+    id: number,
+    updateProduitDto: UpdateProduitDto,
+  ): Promise<Produit> {
     await this.produitRepository.update(id, updateProduitDto);
-    return await this.produitRepository.findOne({where: {id: id, }});
+    return await this.produitRepository.findOne({ where: { id: id } });
   }
 
   async remove(id: number): Promise<void> {
@@ -49,5 +69,4 @@ export class ProduitService {
       .where('categorie.id = :id', { id: categorieId })
       .getMany();
   }
-  
 }
