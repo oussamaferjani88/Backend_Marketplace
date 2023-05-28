@@ -1,6 +1,30 @@
-import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put, CanActivate, ExecutionContext, NotFoundException, UploadedFile } from '@nestjs/common';
-import { FileFieldsInterceptor, FileInterceptor, FilesInterceptor} from '@nestjs/platform-express';
-import { Header, Injectable, Req, UploadedFiles, UseGuards, UseInterceptors } from '@nestjs/common/decorators';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  ParseIntPipe,
+  Post,
+  Put,
+  CanActivate,
+  ExecutionContext,
+  NotFoundException,
+  UploadedFile,
+} from '@nestjs/common';
+import {
+  FileFieldsInterceptor,
+  FileInterceptor,
+  FilesInterceptor,
+} from '@nestjs/platform-express';
+import {
+  Header,
+  Injectable,
+  Req,
+  UploadedFiles,
+  UseGuards,
+  UseInterceptors,
+} from '@nestjs/common/decorators';
 import { ProduitService } from './produit.service';
 import { ProduitDto } from './dto/produit.dto';
 import { UpdateProduitDto } from './dto/update-produit.dto';
@@ -11,9 +35,10 @@ import * as fs from 'fs';
 import { VideoDto } from '../video/dto/video.dto';
 import { ImageDto } from '../image/dto/image.dto';
 import { zip } from 'lodash';
+import { log } from 'console';
 
 @Injectable()
-//Useful if it's impossible to save product along with videos 
+//Useful if it's impossible to save product along with videos
 export class isProduitExistGuard implements CanActivate {
   constructor(private produitService: ProduitService) {}
   async canActivate(context: ExecutionContext): Promise<boolean> {
@@ -47,7 +72,10 @@ export class ProduitController {
   }
 
   @Put(':id')
-  update(@Param('id', ParseIntPipe) id: number, @Body() updateProduitDto: UpdateProduitDto): Promise<Produit> {
+  update(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() updateProduitDto: UpdateProduitDto,
+  ): Promise<Produit> {
     return this.produitService.update(id, updateProduitDto);
   }
 
@@ -57,28 +85,33 @@ export class ProduitController {
   }
 
   @Get('/byCategorie/:id')
-  findProduitByCategorie(@Param('id', ParseIntPipe) categorieId: number): Promise<Produit[]> {
+  findProduitByCategorie(
+    @Param('id', ParseIntPipe) categorieId: number,
+  ): Promise<Produit[]> {
     return this.produitService.findProduitByCategorie(categorieId);
   }
 
   @Get('/bySousCategorie/:id')
-  findProduitBySousCategorie(@Param('id', ParseIntPipe) sousCategorieId: number): Promise<Produit[]> {
+  findProduitBySousCategorie(
+    @Param('id', ParseIntPipe) sousCategorieId: number,
+  ): Promise<Produit[]> {
     return this.produitService.findProduitBySousCategorie(sousCategorieId);
   }
 
   @Get('/produit_search/:name')
-  findProduitByName(@Param('searchBarInput') searchBarInput: string): Promise<Produit[]> {
+  findProduitByName(
+    @Param('searchBarInput') searchBarInput: string,
+  ): Promise<Produit[]> {
     return this.produitService.findProduitByName(searchBarInput);
   }
 
-  //upload images 
+  //upload images
 
   @Post('images/:id')
   @UseInterceptors(FileInterceptor('images'))
   @UseGuards(isProduitExistGuard)
 
   // Provide an array of videos informations
-
   uploadImages(
     @UploadedFile() image: Express.Multer.File,
     @Param('id') id: string,
@@ -94,7 +127,7 @@ export class ProduitController {
     console.log(' create video dto = ' + JSON.stringify(imageDto));*/
 
     // assigning each filename to the create dto of a video
-
+    console.log(image);
     const img = new ImageDto();
       img.fileName = image.filename;
 
@@ -109,7 +142,6 @@ export class ProduitController {
   @UseGuards(isProduitExistGuard)
 
   // Provide an array of videos informations
-
   uploadVideos(
     @UploadedFile() video: Express.Multer.File,
     @Param('id') id: string,
