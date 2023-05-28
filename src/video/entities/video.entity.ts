@@ -11,8 +11,6 @@ export class Video {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
-  nomV: string;
 
   @Column()
   fileName: string;

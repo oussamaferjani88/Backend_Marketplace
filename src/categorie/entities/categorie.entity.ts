@@ -9,7 +9,7 @@ export class Categorie {
 
     @PrimaryGeneratedColumn()
     id : number;
-    
+
     @Column()
     nomCat : string;
 

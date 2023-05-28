@@ -1,13 +1,15 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete ,  UploadedFile,  CanActivate, ExecutionContext,
-  NotFoundException,BadRequestException} from '@nestjs/common';
+  NotFoundException,BadRequestException  ,Res,} from '@nestjs/common';
 import { CreateCategorieDto } from './dto/create-categorie.dto';
 import { UpdateCategorieDto } from './dto/update-categorie.dto';
 import { CategorieService } from './categorie.service';
 import { Produit } from 'src/produit/entities/produit.entity';
 import { Express } from 'express';
-
+import { readFileSync } from 'fs';
+import * as fs from 'fs';
+import { Response } from 'express';
 import {
-  Header,
+  Header, 
   Injectable,
   Req,
   UploadedFiles,
@@ -95,6 +97,12 @@ export class CategorieController {
     return this.categorieService.remove(+id);
   }
  
+  @Get('image/:filename')
+  async serveImage(@Res() res: Response, @Param('filename') filename: string) {
+    const image = readFileSync(`./uploads/${filename}`);
+    res.contentType('image/jpeg');
+    res.send(image);
+  }
 
 
 }

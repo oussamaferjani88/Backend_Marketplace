@@ -96,8 +96,7 @@ export class ProduitController {
     // assigning each filename to the create dto of a video
 
     const img = new ImageDto();
-    img.nomImg = imageDto.nomImg;
-    img.fileName = image.filename;
+      img.fileName = image.filename;
 
     console.log('result = ' + JSON.stringify(img));
     return this.produitService.uploadImages(img, +id);
@@ -128,7 +127,7 @@ export class ProduitController {
     // assigning each filename to the create dto of a video
 
     const vid = new VideoDto();
-    vid.nomV = videoDto.nomV;
+
     vid.fileName = video.filename;
 
     console.log('result = ' + JSON.stringify(vid));

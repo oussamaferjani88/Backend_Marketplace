@@ -7,10 +7,6 @@ export class Image {
     @PrimaryGeneratedColumn()
     id : number ; 
 
-
-    @Column()
-    nomImg : string;
-
     @Column()
     fileName : string;
 
