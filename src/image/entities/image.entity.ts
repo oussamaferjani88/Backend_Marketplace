@@ -11,14 +11,16 @@ import {
 
 @Entity()
 export class Image {
-  @PrimaryGeneratedColumn()
-  id: number;
 
-  @Column({ nullable: true })
-  nomImg: string;
+    @PrimaryGeneratedColumn()
+    id : number ; 
 
-  @Column()
-  fileName: string;
+
+    @Column()
+    nomImg : string;
+
+    @Column()
+    fileName : string;
 
   @ManyToOne((type) => Produit, (produit) => produit.images)
   produit: Produit;

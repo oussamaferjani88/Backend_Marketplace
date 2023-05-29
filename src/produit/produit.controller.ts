@@ -115,7 +115,7 @@ export class ProduitController {
   uploadImages(
     @UploadedFile() image: Express.Multer.File,
     @Param('id') id: string,
-    @Body() imageDto: ImageDto,
+    @Body() imageDto: ImageDto
   ) {
     /*console.log('videoDto = ' + JSON.stringify(imageDto));
     console.log(id);

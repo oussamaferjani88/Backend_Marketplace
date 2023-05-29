@@ -12,10 +12,11 @@ export class AdminController {
         return this.adminService.findAll();
     }
 
-    @Post()
-    async create(@Body() AdminDto: AdminDto): Promise<Admin> {
+    @Post('Register')
+    async Register(@Body() admin: AdminDto): Promise<Admin> {
+        //console.log('creating utilisateur:', AdminDto);
         try  {
-            const createdAdmin = await this.adminService.create(AdminDto);
+            const createdAdmin = await this.adminService.create(admin);
             return createdAdmin;
         } catch (error) {
             console.error('Failed to create admin', error);
