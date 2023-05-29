@@ -1,17 +1,12 @@
 import { Produit } from 'src/produit/entities/produit.entity';
-import {
-  Entity,
-  Column,
-  PrimaryGeneratedColumn,
-  ManyToOne
-} from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
 
 @Entity()
 export class Video {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
+  @Column({ nullable: true })
   nomV: string;
 
   @Column()
