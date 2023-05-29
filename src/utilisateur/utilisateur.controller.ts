@@ -18,9 +18,9 @@ export class UtilisateurController {
   }
 
  
-  @Post()
+  @Post('Register')
   async Register(@Body() utilisateur: UtilisateurDto): Promise<Utilisateur> {
-    console.log('creating utilisateur:', utilisateur);
+    //console.log('creating utilisateur:', utilisateur);
     try {
       const createdUtilisateur = await this.utilisateurService.create(utilisateur);
       console.log('created utilisateur:', createdUtilisateur);
