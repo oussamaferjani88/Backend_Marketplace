@@ -25,7 +25,7 @@ export class Utilisateur {
   email: string;
 
   @Column()
-  mdp: string;
+  password: string;
 
   @Column({ nullable: true })
   num_tlf: string;

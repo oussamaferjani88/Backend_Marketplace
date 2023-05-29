@@ -5,6 +5,7 @@ import { Repository } from 'typeorm';
 import { Utilisateur } from './entities/utilisateur.entity';
 import { UtilisateurDto } from './dto/utilisateur.dto';
 import * as bcrypt from 'bcrypt';
+import { hash } from 'bcrypt';
 
 @Injectable()
 export class UtilisateurService {
@@ -26,35 +27,49 @@ export class UtilisateurService {
     return this.utilisateurRepository.findOne({ where: { email } });
   }
 
-  async validateUser(email: string, password: string): Promise<Utilisateur | undefined> {
+  // async validateUser(email: string, password: string): Promise<Utilisateur> {
 
+  //   const user = await this.findOneEmail(email);
+  //   if (user && (await bcrypt.compare(password, user.password))) {
+  //     return user;
+  //   }
+  //   return null;
+  // }
+
+
+  async validateUser(email: string, password: string): Promise<Utilisateur> {
     const user = await this.findOneEmail(email);
-    if (user && (await bcrypt.compare(password, user.mdp))) {
-      return user;
+    if (user) {
+      console.log('Stored hashed password:', user.password);
+  
+      const passwordMatch = await bcrypt.compare(password, user.password);
+      console.log('Password comparison result:', passwordMatch);
+  
+      if (passwordMatch) {
+        return user;
+      }
     }
     return null;
   }
+  
 
   async create(utilisateur: UtilisateurDto): Promise<Utilisateur> {
-    //console.log('creating utilisateur:', utilisateur);
     const existingUser = await this.findOneEmail(utilisateur.email);
     if (existingUser) {
       throw new Error('User with that email already exists');
-    }
-    else {
+    } else {
       try {
-        const payload = { email : utilisateur.email};
-        const token = this.jwtService.signAsync(payload)
-        const hashedPassword = await bcrypt.hash(utilisateur.mdp, 10);
+        const payload = { email: utilisateur.email };
+        const token = await this.jwtService.signAsync(payload);
+        const hashedPassword = await bcrypt.hash(utilisateur.password, 10);
+
         const newUser = this.utilisateurRepository.create({
           ...utilisateur,
-          mdp: hashedPassword,
-          
+          password: hashedPassword,
         });
-        //console.log('new utilisateur :', newUser);
         return await this.utilisateurRepository.save(newUser);
       } catch (error) {
-        console.error('error creating utilisateur :', error);
+        console.error('error creating utilisateur:', error);
         throw error;
       }
     }

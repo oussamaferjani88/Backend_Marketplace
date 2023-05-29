@@ -2,7 +2,7 @@ export class UtilisateurDto {
 
     nom_complet : string ; 
     email : string ; 
-    mdp : string ; 
+    password : string ; 
     num_tlf : string ; 
     localisation : string ; 
     pdp : string ; 

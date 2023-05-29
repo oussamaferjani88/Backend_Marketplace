@@ -16,7 +16,7 @@ export class Image {
     id : number ; 
 
 
-    @Column()
+    @Column({nullable : true})
     nomImg : string;
 
     @Column()
