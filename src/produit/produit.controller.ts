@@ -16,6 +16,7 @@ import {
   FileFieldsInterceptor,
   FileInterceptor,
   FilesInterceptor,
+  
 } from '@nestjs/platform-express';
 import {
   Header,
@@ -36,7 +37,7 @@ import { VideoDto } from '../video/dto/video.dto';
 import { ImageDto } from '../image/dto/image.dto';
 import { zip } from 'lodash';
 import { log } from 'console';
-
+import { AuthGuard } from 'src/auth/jwt/auth.guards';
 @Injectable()
 //Useful if it's impossible to save product along with videos
 export class isProduitExistGuard implements CanActivate {
@@ -57,6 +58,7 @@ export class ProduitController {
   constructor(private readonly produitService: ProduitService) {}
 
   @Post()
+  @UseGuards(AuthGuard) 
   create(@Body() produitDto: ProduitDto): Promise<Produit> {
     return this.produitService.create(produitDto);
   }
