@@ -36,7 +36,6 @@ export class ProduitService {
       relations: [
         'boutiques',
         'sousCategorie',
-        'categorie',
         'images',
         'videos',
       ],
@@ -123,4 +122,28 @@ export class ProduitService {
       .where('produit.nomP ILIKE :name', { name: `%${name}%` })
       .getMany();
   }
+
+
+
+  async getProductImages(id: number): Promise<Image[]> {
+    const produit = await this.produitRepository.findOne({where : {id}});
+    if (!produit) {
+      // Handle the case where the product is not found
+      // For example, throw an exception or return an error message
+    }
+    return produit.images;
+  }
+
+
+  async getProductVideos(id: number): Promise<Video[]> {
+    const produit = await this.produitRepository.findOne({where : {id}});
+    if (!produit) {
+      console.log(`Produit with ID ${id} not found`);
+    }
+    return produit.videos;
+  }
+
+
+
+
 }
