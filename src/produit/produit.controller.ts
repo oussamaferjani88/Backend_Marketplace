@@ -59,16 +59,10 @@ export class ProduitController {
   constructor(private readonly produitService: ProduitService) {}
 
   @Post()
-  @UseGuards(AuthGuard) 
   create(@Body() produitDto: ProduitDto): Promise<Produit> {
     return this.produitService.create(produitDto);
   }
 
-  // @Get('videos/:id')
-  // async getVideos(@Param('id') id: number) {
-  //   const videos = await this.produitService.getProductVideos(id);
-  //   return videos;
-  // }
 
   @Get()
   findAll(): Promise<Produit[]> {
