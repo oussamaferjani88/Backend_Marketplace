@@ -1,13 +1,22 @@
-import { Controller, Get, Post, Body, Param, Put, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Param,
+  Put,
+  Delete,
+} from '@nestjs/common';
 import { MessageService } from './message.service';
 import { Message } from './entities/message.entity';
+import { CreateMessageDto } from './dto/create-message.dto';
 
 @Controller('messages')
 export class MessageController {
   constructor(private readonly messageService: MessageService) {}
 
   @Post()
-  create(@Body() message: Partial<Message>): Promise<Message> {
+  create(@Body() message: CreateMessageDto): Promise<Message> {
     return this.messageService.create(message);
   }
 
@@ -22,7 +31,10 @@ export class MessageController {
   }
 
   @Put(':id')
-  update(@Param('id') id: string, @Body() message: Partial<Message>): Promise<Message> {
+  update(
+    @Param('id') id: string,
+    @Body() message: Partial<Message>,
+  ): Promise<Message> {
     return this.messageService.update(+id, message);
   }
 

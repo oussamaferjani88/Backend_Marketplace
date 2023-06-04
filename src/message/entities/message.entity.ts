@@ -1,20 +1,32 @@
-import { Utilisateur } from "src/utilisateur/entities/utilisateur.entity";
-import {Entity , Column , PrimaryGeneratedColumn , ManyToMany ,OneToMany , ManyToOne , OneToOne } from "typeorm"
+import { Utilisateur } from 'src/utilisateur/entities/utilisateur.entity';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  ManyToMany,
+  OneToMany,
+  ManyToOne,
+  OneToOne,
+  CreateDateColumn,
+} from 'typeorm';
 
 @Entity()
 export class Message {
   @PrimaryGeneratedColumn()
-  id : number;
+  id: number;
 
   @Column()
-  message : string;
+  message: string;
 
-  @Column()
-  date_envoi : Date;
+  @CreateDateColumn({ type: 'timestamp' })
+  date_envoi: Date;
 
-  @ManyToOne((type) => Utilisateur, utilisateur => utilisateur.Messagesenvoyer)
+  @ManyToOne(
+    (type) => Utilisateur,
+    (utilisateur) => utilisateur.messagesEnvoyer,
+  )
   expediteur: Utilisateur;
 
-  @ManyToOne((type) => Utilisateur, utilisateur => utilisateur.Messagesrecus)
+  @ManyToOne((type) => Utilisateur, (utilisateur) => utilisateur.messagesRecus)
   recepteur: Utilisateur;
 }

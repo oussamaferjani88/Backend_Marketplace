@@ -38,7 +38,7 @@ import { MailModule } from './mail/mail.module';
       host: '127.0.0.1',
       port: 5432,
       username: 'postgres',
-      password: 'oussama',
+      password: 'karem',
       database: 'marketplace',
       autoLoadEntities: true,
       synchronize: true,
@@ -46,7 +46,6 @@ import { MailModule } from './mail/mail.module';
     }),
     MulterModule.register({
       dest: './uploads',
-     
     }),
     MailModule,
   ],

@@ -55,8 +55,8 @@ export class Utilisateur {
   signals: Signal[];
 
   @OneToMany((type) => Message, (message) => message.expediteur)
-  Messagesenvoyer: Message[];
+  messagesEnvoyer: Message[];
 
   @OneToMany((type) => Message, (message) => message.recepteur)
-  Messagesrecus: Message[];
+  messagesRecus: Message[];
 }

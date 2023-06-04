@@ -1,3 +1,5 @@
 export class CreateMessageDto {
-    message : string;
+  expdId: number;
+  message: string;
+  recepId: number;
 }

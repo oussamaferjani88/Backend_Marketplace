@@ -36,6 +36,7 @@ import { VideoDto } from '../video/dto/video.dto';
 import { ImageDto } from '../image/dto/image.dto';
 import { zip } from 'lodash';
 import { log } from 'console';
+import { AuthGuard } from 'src/auth/jwt/auth.guards';
 
 @Injectable()
 //Useful if it's impossible to save product along with videos
@@ -62,6 +63,7 @@ export class ProduitController {
   }
 
   @Get()
+  @UseGuards(AuthGuard)
   findAll(): Promise<Produit[]> {
     return this.produitService.findAll();
   }
@@ -115,7 +117,7 @@ export class ProduitController {
   uploadImages(
     @UploadedFile() image: Express.Multer.File,
     @Param('id') id: string,
-    @Body() imageDto: ImageDto
+    @Body() imageDto: ImageDto,
   ) {
     /*console.log('videoDto = ' + JSON.stringify(imageDto));
     console.log(id);
@@ -129,7 +131,7 @@ export class ProduitController {
     // assigning each filename to the create dto of a video
     console.log(image);
     const img = new ImageDto();
-      img.fileName = image.filename;
+    img.fileName = image.filename;
 
     console.log('result = ' + JSON.stringify(img));
     return this.produitService.uploadImages(img, +id);
