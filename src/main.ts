@@ -5,16 +5,13 @@ import * as express from 'express';
 
 
 const corsOptions: CorsOptions = {
-  origin: 'http://localhost:3001',
+  origin: ['http://localhost:3001','http://localhost:3002'],
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
 };
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.enableCors(corsOptions);
-  // app.use(express.json({limit : '10mb'}));
-  // app.use(express.urlencoded({limit : '10mb', extended:true}));
   await app.listen(3000);
-
 }
 bootstrap();
