@@ -5,7 +5,7 @@ import * as express from 'express';
 
 
 const corsOptions: CorsOptions = {
-  origin: ['http://localhost:3001','http://localhost:3002'],
+  origin: 'http://localhost:3001',
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
 };
 

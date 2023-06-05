@@ -20,21 +20,16 @@ export class UtilisateurService {
   }
 
   async findOneId(id: number): Promise<Utilisateur> {
-    return this.utilisateurRepository.findOne({ where: { id } });
+    return this.utilisateurRepository.findOne({ where: { id } ,
+      relations : ['produits' , 'produits.images' , 'produits.videos']
+    
+    });
   }
 
   async findOneEmail(email: string): Promise<Utilisateur> {
     return this.utilisateurRepository.findOne({ where: { email } });
   }
 
-  // async validateUser(email: string, password: string): Promise<Utilisateur> {
-
-  //   const user = await this.findOneEmail(email);
-  //   if (user && (await bcrypt.compare(password, user.password))) {
-  //     return user;
-  //   }
-  //   return null;
-  // }
 
 
   async validateUser(email: string, password: string): Promise<Utilisateur> {
@@ -83,4 +78,11 @@ export class UtilisateurService {
   async remove(id: number): Promise<void> {
     await this.utilisateurRepository.delete(id);
   }
+
+  async uploadProfileImage(profileImage: string, id: number) {
+    console.log("profileImage :",profileImage);
+    return this.utilisateurRepository.update(id, { profileImage: profileImage });
+  }
+
+
 }

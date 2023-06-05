@@ -39,7 +39,6 @@ export class isCategorieExistGuard implements CanActivate {
 }
 
 
-
 @Controller('categorie')
 export class CategorieController {
   constructor(private readonly categorieService: CategorieService) {}
@@ -48,17 +47,6 @@ export class CategorieController {
     console.log('createFormationDto = ' + JSON.stringify(createCategorieDto));
     return this.categorieService.create(createCategorieDto);
   }
-
-  // // upload image
-  // @Post('coverImage/:id')
-  // @UseInterceptors(FileInterceptor('coverImage'))
-  // @UseGuards(isCategorieExistGuard)
-  // uploadCoverImage(
-  //   @UploadedFile() coverImage: Express.Multer.File,
-  //   @Param('id') id: string,
-  // ) {
-  //   return this.categorieService.uploadCoverImage(coverImage.filename, +id);
-  // }
 
   @Post('coverImage/:id')
   @UseInterceptors(FileInterceptor('coverImage'))

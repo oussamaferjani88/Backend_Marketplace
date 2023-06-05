@@ -42,6 +42,9 @@ export class Utilisateur {
   @Column({ nullable: true })
   note: number;
 
+  @Column({ nullable: true })
+  profileImage: string;
+
   @OneToMany(() => Produit, (produit) => produit.utilisateur)
   produits: Produit[];
 
