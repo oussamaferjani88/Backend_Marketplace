@@ -20,6 +20,15 @@ import {
   FileInterceptor,
   FilesInterceptor,
 } from '@nestjs/platform-express';
+import { UpdateUtilisateurDto } from './dto/update-utilisateur.dto';
+
+
+
+
+
+
+
+
 
 @Injectable()
 export class isUtilisateurExistGuard implements CanActivate {
@@ -65,13 +74,17 @@ export class UtilisateurController {
     }
   }
 
+  // async update(id: number, utilisateur: Partial<Utilisateur>,): Promise<Utilisateur> {
+  //   await this.utilisateurRepository.update(id, utilisateur);
+  //   return this.utilisateurRepository.findOne({ where: { id } });
+  // }
 
   @Put(':id')
   async update(
     @Param('id') id: number,
-    @Body() utilisateur: Partial<Utilisateur>,
+    @Body() utilisateurDto: UpdateUtilisateurDto,
   ): Promise<Utilisateur> {
-    return this.utilisateurService.update(id, utilisateur);
+    return this.utilisateurService.update(id, utilisateurDto);
   }
 
   @Delete(':id')

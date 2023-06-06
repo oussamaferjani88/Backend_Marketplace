@@ -34,9 +34,6 @@ export class Utilisateur {
   localisation: string;
 
   @Column({ nullable: true })
-  pdp: string;
-
-  @Column({ nullable: true })
   est_interdit: boolean;
 
   @Column({ nullable: true })

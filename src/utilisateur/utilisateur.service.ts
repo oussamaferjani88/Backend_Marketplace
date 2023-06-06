@@ -6,7 +6,7 @@ import { Utilisateur } from './entities/utilisateur.entity';
 import { UtilisateurDto } from './dto/utilisateur.dto';
 import * as bcrypt from 'bcrypt';
 import { hash } from 'bcrypt';
-
+import { UpdateUtilisateurDto } from './dto/update-utilisateur.dto';
 @Injectable()
 export class UtilisateurService {
   constructor(
@@ -70,10 +70,16 @@ export class UtilisateurService {
     }
   }
 
-  async update(id: number, utilisateur: Partial<Utilisateur>,): Promise<Utilisateur> {
-    await this.utilisateurRepository.update(id, utilisateur);
-    return this.utilisateurRepository.findOne({ where: { id } });
+  // async update(id: number, utilisateur: Partial<Utilisateur>,): Promise<Utilisateur> {
+  //   await this.utilisateurRepository.update(id, utilisateur);
+  //   return this.utilisateurRepository.findOne({ where: { id } });
+  // }
+  async update(id: number, utilisateurDto: UpdateUtilisateurDto): Promise<Utilisateur> {
+    await this.utilisateurRepository.update(id, utilisateurDto);
+    return this.utilisateurRepository.findOne({ where: { id }});
   }
+
+
 
   async remove(id: number): Promise<void> {
     await this.utilisateurRepository.delete(id);
