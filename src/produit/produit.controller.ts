@@ -16,11 +16,13 @@ import {
   FileFieldsInterceptor,
   FileInterceptor,
   FilesInterceptor,
+  
 } from '@nestjs/platform-express';
 import {
   Header,
   Injectable,
   Req,
+  Res,
   UploadedFiles,
   UseGuards,
   UseInterceptors,
@@ -36,7 +38,7 @@ import { VideoDto } from '../video/dto/video.dto';
 import { ImageDto } from '../image/dto/image.dto';
 import { zip } from 'lodash';
 import { log } from 'console';
-
+import { AuthGuard } from 'src/auth/jwt/auth.guards';
 @Injectable()
 //Useful if it's impossible to save product along with videos
 export class isProduitExistGuard implements CanActivate {
@@ -61,6 +63,7 @@ export class ProduitController {
     return this.produitService.create(produitDto);
   }
 
+
   @Get()
   findAll(): Promise<Produit[]> {
     return this.produitService.findAll();
@@ -69,6 +72,12 @@ export class ProduitController {
   @Get(':id')
   findOne(@Param('id', ParseIntPipe) id: number): Promise<Produit> {
     return this.produitService.findOneId(id);
+  }
+
+  @Get('image/:id')
+  async getImages(@Param('id') id: number) {
+    const images = await this.produitService.getProductImages(id);
+    return images;
   }
 
   @Put(':id')
@@ -105,6 +114,7 @@ export class ProduitController {
     return this.produitService.findProduitByName(searchBarInput);
   }
 
+
   //upload images
 
   @Post('images/:id')
@@ -129,8 +139,7 @@ export class ProduitController {
     // assigning each filename to the create dto of a video
     console.log(image);
     const img = new ImageDto();
-    img.nomImg = imageDto.nomImg;
-    img.fileName = image.filename;
+      img.fileName = image.filename;
 
     console.log('result = ' + JSON.stringify(img));
     return this.produitService.uploadImages(img, +id);
@@ -160,10 +169,69 @@ export class ProduitController {
     // assigning each filename to the create dto of a video
 
     const vid = new VideoDto();
-    vid.nomV = videoDto.nomV;
+
     vid.fileName = video.filename;
 
     console.log('result = ' + JSON.stringify(vid));
     return this.produitService.uploadVideos(vid, +id);
   }
+
+
+  @Get('images/:fileName')
+  async serveImage(@Res() res: Response, @Param('fileName') fileName: string) {
+    const image = readFileSync(`./uploads/${fileName}`);
+    res.contentType('image/jpeg');
+    res.send(image);
+  }
+
+
+
+
+
+  @Get('videos/:fileName')
+  async streamVideo(
+    @Req() req,
+    @Res() res,
+    @Param('fileName') fileName: string,
+  ) {
+    console.log('filename = ' + fileName);
+
+    const path = `./uploads/${fileName}`;
+    const stat = fs.statSync(path);
+    const fileSize = stat.size;
+    const range = req.headers.range;
+
+    if (range) {
+      const parts = range.replace(/bytes=/, '').split('-');
+      const start = parseInt(parts[0], 10);
+      const end = parts[1] ? parseInt(parts[1], 10) : fileSize - 1;
+      const chunksize = end - start + 1;
+      const file = fs.createReadStream(path, { start, end });
+      const head = {
+        'Content-Range': `bytes ${start}-${end}/${fileSize}`,
+        'Accept-Ranges': 'bytes',
+        'Content-Length': chunksize,
+        'Content-Type': 'video/mp4',
+      };
+
+      res.writeHead(206, head);
+      file.pipe(res);
+    } else {
+      const head = {
+        'Content-Length': fileSize,
+        'Content-Type': 'video/mp4',
+      };
+      res.writeHead(200, head);
+      fs.createReadStream(path).pipe(res);
+    }
+  }
+
+
+
+
+
+
+
+
+
 }

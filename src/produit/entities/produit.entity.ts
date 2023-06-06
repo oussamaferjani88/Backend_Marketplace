@@ -13,6 +13,7 @@ import {
   ManyToOne,
   OneToOne,
   JoinTable,
+  CreateDateColumn
 } from 'typeorm';
 
 @Entity()
@@ -29,10 +30,10 @@ export class Produit {
   @Column()
   description: string;
 
-  @Column()
+  @CreateDateColumn()
   date_p: Date;
 
-  @Column()
+  @Column({default : false})
   vendue: boolean;
 
   @Column({ nullable: true })

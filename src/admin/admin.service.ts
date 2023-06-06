@@ -37,6 +37,21 @@ export class AdminService {
     }
   }
 
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
   async update(id: number, admin: Partial<Admin>,): Promise<Admin> {
     await this.adminRepository.update(id, admin);
     return this.adminRepository.findOne({ where: { id } });

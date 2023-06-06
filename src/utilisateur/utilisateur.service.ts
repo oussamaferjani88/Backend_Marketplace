@@ -5,7 +5,8 @@ import { Repository } from 'typeorm';
 import { Utilisateur } from './entities/utilisateur.entity';
 import { UtilisateurDto } from './dto/utilisateur.dto';
 import * as bcrypt from 'bcrypt';
-
+import { hash } from 'bcrypt';
+import { UpdateUtilisateurDto } from './dto/update-utilisateur.dto';
 @Injectable()
 export class UtilisateurService {
   constructor(
@@ -19,53 +20,75 @@ export class UtilisateurService {
   }
 
   async findOneId(id: number): Promise<Utilisateur> {
-    return this.utilisateurRepository.findOne({ where: { id } });
+    return this.utilisateurRepository.findOne({ where: { id } ,
+      relations : ['produits' , 'produits.images' , 'produits.videos']
+    
+    });
   }
 
   async findOneEmail(email: string): Promise<Utilisateur> {
     return this.utilisateurRepository.findOne({ where: { email } });
   }
 
-  async validateUser(email: string, password: string): Promise<Utilisateur | undefined> {
 
+
+  async validateUser(email: string, password: string): Promise<Utilisateur> {
     const user = await this.findOneEmail(email);
-    if (user && (await bcrypt.compare(password, user.mdp))) {
-      return user;
+    if (user) {
+      console.log('Stored hashed password:', user.password);
+  
+      const passwordMatch = await bcrypt.compare(password, user.password);
+      console.log('Password comparison result:', passwordMatch);
+  
+      if (passwordMatch) {
+        return user;
+      }
     }
     return null;
   }
+  
 
   async create(utilisateur: UtilisateurDto): Promise<Utilisateur> {
-    //console.log('creating utilisateur:', utilisateur);
     const existingUser = await this.findOneEmail(utilisateur.email);
     if (existingUser) {
       throw new Error('User with that email already exists');
-    }
-    else {
+    } else {
       try {
-        const payload = { email : utilisateur.email};
-        const token = this.jwtService.signAsync(payload)
-        const hashedPassword = await bcrypt.hash(utilisateur.mdp, 10);
+        const payload = { email: utilisateur.email };
+        const token = await this.jwtService.signAsync(payload);
+        const hashedPassword = await bcrypt.hash(utilisateur.password, 10);
+
         const newUser = this.utilisateurRepository.create({
           ...utilisateur,
-          mdp: hashedPassword,
-          
+          password: hashedPassword,
         });
-        //console.log('new utilisateur :', newUser);
         return await this.utilisateurRepository.save(newUser);
       } catch (error) {
-        console.error('error creating utilisateur :', error);
+        console.error('error creating utilisateur:', error);
         throw error;
       }
     }
   }
 
-  async update(id: number, utilisateur: Partial<Utilisateur>,): Promise<Utilisateur> {
-    await this.utilisateurRepository.update(id, utilisateur);
-    return this.utilisateurRepository.findOne({ where: { id } });
+  // async update(id: number, utilisateur: Partial<Utilisateur>,): Promise<Utilisateur> {
+  //   await this.utilisateurRepository.update(id, utilisateur);
+  //   return this.utilisateurRepository.findOne({ where: { id } });
+  // }
+  async update(id: number, utilisateurDto: UpdateUtilisateurDto): Promise<Utilisateur> {
+    await this.utilisateurRepository.update(id, utilisateurDto);
+    return this.utilisateurRepository.findOne({ where: { id }});
   }
+
+
 
   async remove(id: number): Promise<void> {
     await this.utilisateurRepository.delete(id);
   }
+
+  async uploadProfileImage(profileImage: string, id: number) {
+    console.log("profileImage :",profileImage);
+    return this.utilisateurRepository.update(id, { profileImage: profileImage });
+  }
+
+
 }

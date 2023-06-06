@@ -8,6 +8,7 @@ import { UpdateProduitDto } from './dto/update-produit.dto';
 import { Produit } from './entities/produit.entity';
 import { Video } from '../video/entities/video.entity';
 import { Image } from '../image/entities/image.entity';
+import { Utilisateur } from 'src/utilisateur/entities/utilisateur.entity';
 
 @Injectable()
 export class ProduitService {
@@ -18,16 +19,17 @@ export class ProduitService {
     private readonly videoRepository: Repository<Video>,
     @InjectRepository(Image)
     private readonly imageRepository: Repository<Image>,
+    @InjectRepository(Utilisateur)
+    private readonly utilisateurRepository: Repository<Utilisateur>,
   ) {}
 
-  async create(produitDto: ProduitDto): Promise<Produit> {
-    const currentDate = new Date();
-    const produit = this.produitRepository.create({
-      ...produitDto,
-      date_p: currentDate,
-      vendue: false,
-    });
 
+  async create(produitDto: ProduitDto){
+    const currentDate = new Date();
+    const utilisateur  = await this.utilisateurRepository.findOne({where : { id :produitDto.utilisateurId}})
+    const {utilisateurId , ...rest } = produitDto ;
+    const produit = this.produitRepository.create(rest );
+    produit.utilisateur = utilisateur;
     return this.produitRepository.save(produit);
   }
 
@@ -45,7 +47,7 @@ export class ProduitService {
   async findOneId(produitId: number): Promise<Produit> {
     return await this.produitRepository.findOne({
       where: { id: produitId },
-      relations: ['boutiques', 'sousCategorie', 'images', 'videos'],
+      relations: ['boutiques', 'sousCategorie', 'images', 'videos' , 'utilisateur'],
     });
   }
 
@@ -122,4 +124,28 @@ export class ProduitService {
       .where('produit.nomP ILIKE :name', { name: `%${name}%` })
       .getMany();
   }
+
+
+
+  async getProductImages(id: number): Promise<Image[]> {
+    const produit = await this.produitRepository.findOne({where : {id}});
+    if (!produit) {
+      // Handle the case where the product is not found
+      // For example, throw an exception or return an error message
+    }
+    return produit.images;
+  }
+
+
+  async getProductVideos(id: number): Promise<Video[]> {
+    const produit = await this.produitRepository.findOne({where : {id}});
+    if (!produit) {
+      console.log(`Produit with ID ${id} not found`);
+    }
+    return produit.videos;
+  }
+
+
+
+
 }

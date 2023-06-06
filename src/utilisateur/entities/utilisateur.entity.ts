@@ -25,7 +25,7 @@ export class Utilisateur {
   email: string;
 
   @Column()
-  mdp: string;
+  password: string;
 
   @Column({ nullable: true })
   num_tlf: string;
@@ -34,13 +34,13 @@ export class Utilisateur {
   localisation: string;
 
   @Column({ nullable: true })
-  pdp: string;
-
-  @Column({ nullable: true })
   est_interdit: boolean;
 
   @Column({ nullable: true })
   note: number;
+
+  @Column({ nullable: true })
+  profileImage: string;
 
   @OneToMany(() => Produit, (produit) => produit.utilisateur)
   produits: Produit[];

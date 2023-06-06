@@ -10,15 +10,15 @@ export class AuthController {
     constructor(private authService: AuthService) { }
 
     @HttpCode(HttpStatus.OK)
-    @Post('log_in')
+    @Post('Adminlogin')
     AdminLogIn(@Body() admin: AdminDto) {
         return this.authService.AdminlogIn(admin.username, admin.password);
     }
 
     @HttpCode(HttpStatus.OK)
-    @Post('log_in')
+    @Post('Userlogin')
     UtilisateurLogIn(@Body() utilisateur: UtilisateurDto) {
-        return this.authService.AdminlogIn(utilisateur.email, utilisateur.mdp);
+        return this.authService.UserlogIn(utilisateur.email, utilisateur.password);
     }
     
 

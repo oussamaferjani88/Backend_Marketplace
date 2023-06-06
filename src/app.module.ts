@@ -46,6 +46,7 @@ import { MailModule } from './mail/mail.module';
     }),
     MulterModule.register({
       dest: './uploads',
+     
     }),
     MailModule,
   ],
