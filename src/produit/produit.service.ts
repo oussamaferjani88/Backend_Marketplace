@@ -36,7 +36,6 @@ export class ProduitService {
       relations: [
         'boutiques',
         'sousCategorie',
-        'categorie',
         'images',
         'videos',
       ],
