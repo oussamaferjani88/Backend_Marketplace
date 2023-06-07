@@ -38,7 +38,7 @@ export class isUtilisateurExistGuard implements CanActivate {
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const req = context.switchToHttp().getRequest();
     const idUtilisateur = req.params.id;
-    console.log('#guard, Categorie id = ' + idUtilisateur  );
+    console.log('#guard, Utilisateur id = ' + idUtilisateur  );
     const f = await this.utilisateurService.findOneId(idUtilisateur);
     if (!f)
       throw new NotFoundException(`Utilisateur with ID ${idUtilisateur} not found`);

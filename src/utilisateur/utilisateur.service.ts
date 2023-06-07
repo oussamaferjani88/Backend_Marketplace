@@ -87,7 +87,7 @@ export class UtilisateurService {
 
   async uploadProfileImage(profileImage: string, id: number) {
     console.log("profileImage :",profileImage);
-    return this.utilisateurRepository.update(id, { profileImage: profileImage });
+    return this.utilisateurRepository.update(id, { profileImage :profileImage });
   }
 
 
