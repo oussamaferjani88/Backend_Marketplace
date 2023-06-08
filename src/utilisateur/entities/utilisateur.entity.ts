@@ -42,7 +42,7 @@ export class Utilisateur {
   @Column({ nullable: true })
   profileImage: string;
 
-  @OneToMany(() => Produit, (produit) => produit.utilisateur)
+  @OneToMany(() => Produit, (produit) => produit.utilisateur , { cascade: true })
   produits: Produit[];
 
   @OneToMany((type) => Evaluation, (evaluation) => evaluation.utilisateur)

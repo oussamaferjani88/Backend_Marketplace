@@ -55,9 +55,9 @@ export class Produit {
   @OneToMany(() => Signal, (signal) => signal.produit /*, { nullable: true }*/)
   signals: Signal[];
 
-  @OneToMany(() => Image, (image) => image.produit, { cascade: ['remove'] })
+  @OneToMany(() => Image, (image) => image.produit)
   images: Image[];
 
-  @OneToMany(() => Video, (video) => video.produit, { cascade: ['remove'] })
+  @OneToMany(() => Video, (video) => video.produit)
   videos: Video[];
 }

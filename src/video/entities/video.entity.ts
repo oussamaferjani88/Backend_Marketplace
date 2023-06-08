@@ -12,6 +12,6 @@ export class Video {
   @Column()
   fileName: string;
 
-  @ManyToOne(() => Produit, (produit) => produit.videos, { onDelete: 'CASCADE' })
+  @ManyToOne(() => Produit, (produit) => produit.videos)
   produit: Produit;
 }

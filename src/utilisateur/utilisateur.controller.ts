@@ -111,13 +111,25 @@ export class UtilisateurController {
   }
   
 
+
+
   @Get('image/:filename')
   async serveImage(@Res() res: Response, @Param('filename') filename: string) {
-    const image = readFileSync(`./uploads/${filename}`);
-    res.contentType('image/jpeg');
-    res.send(image);
+    if (!filename) {
+      throw new NotFoundException('Image not found');
+    }
+  
+    const imagePath = `./uploads/${filename}`;
+  
+    try {
+      const image = readFileSync(imagePath);
+      res.contentType('image/jpeg');
+      res.send(image);
+    } catch (error) {
+      throw new NotFoundException('Image not found');
+    }
   }
-
+  
 
 
 

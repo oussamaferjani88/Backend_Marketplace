@@ -22,6 +22,6 @@ export class Image {
     @Column()
     fileName : string;
 
-    @ManyToOne(() => Produit, (produit) => produit.images, { onDelete: 'CASCADE' })
+    @ManyToOne(() => Produit, (produit) => produit.images)
     produit: Produit;
 }
