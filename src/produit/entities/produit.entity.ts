@@ -33,6 +33,9 @@ export class Produit {
   @CreateDateColumn()
   date_p: Date;
 
+  @Column({ nullable: true })
+  localisation: string;
+
   @Column({default : false})
   vendue: boolean;
 
@@ -48,6 +51,13 @@ export class Produit {
   )
   sousCategorie: SousCategorie;
 
+  
+  @ManyToOne(
+    (type) => SousCategorie,
+    (Categorie) => Categorie.produits /*, { nullable: true }*/,
+  )
+  Categorie: SousCategorie;
+
   @ManyToMany(() => Boutique, (boutique) => boutique.produits)
   @JoinTable()
   boutiques: Boutique[];
@@ -55,9 +65,9 @@ export class Produit {
   @OneToMany(() => Signal, (signal) => signal.produit /*, { nullable: true }*/)
   signals: Signal[];
 
-  @OneToMany(() => Image, (image) => image.produit)
+  @OneToMany(() => Image, (image) => image.produit , {cascade : true})
   images: Image[];
 
-  @OneToMany(() => Video, (video) => video.produit)
+  @OneToMany(() => Video, (video) => video.produit , {cascade : true})
   videos: Video[];
 }

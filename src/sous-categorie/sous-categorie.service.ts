@@ -42,7 +42,7 @@ export class SousCategorieService {
   }
 
   async findOne(id: number): Promise<SousCategorie> {
-    return await this.sousCategorieRepository.findOne({ where: { id: id } });
+    return await this.sousCategorieRepository.findOne({ where: { id: id } , relations: ['categorie'] });
   }
 
   async update(

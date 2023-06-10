@@ -47,7 +47,7 @@ export class ProduitService {
   async findOneId(produitId: number): Promise<Produit> {
     return await this.produitRepository.findOne({
       where: { id: produitId },
-      relations: ['boutiques', 'sousCategorie', 'images', 'videos' , 'utilisateur'],
+      relations: ['boutiques', 'sousCategorie', 'images', 'videos' , 'utilisateur' ],
     });
   }
 

@@ -7,4 +7,5 @@ prix : number ;
 description : string;
 date_v : Date ;
 utilisateurId : number;
+localisation: string;
 }
