@@ -37,8 +37,6 @@ export class Utilisateur {
   @Column({ default : false })
   est_interdit: boolean;
 
-  
-
   @Column({ nullable: true })
   profileImage: string;
 
@@ -53,10 +51,10 @@ export class Utilisateur {
 
 
   @OneToMany((type) => Message, (message) => message.expediteur)
-  envoyeur: Message[];
+  messages_envoyer: Message[];
 
   @OneToMany((type) => Message, (message) => message.recepteur)
-  Messagesrecus: Message[];
+  mssages_recues: Message[];
 
   @OneToMany(() => Achat, (achat) => achat.utilisateur)
   achats: Achat[];

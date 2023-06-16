@@ -1,5 +1,6 @@
+import {Entity , Column , PrimaryGeneratedColumn , ManyToOne , CreateDateColumn } from "typeorm"
 import { Utilisateur } from "src/utilisateur/entities/utilisateur.entity";
-import {Entity , Column , PrimaryGeneratedColumn , ManyToOne , JoinColumn } from "typeorm"
+
 
 @Entity()
 export class Message {
@@ -9,15 +10,22 @@ export class Message {
   @Column()
   contenu : string;
 
-  @Column()
+  @CreateDateColumn()
   date_envoi : Date;
 
-  @Column()
+  @Column({default : false})
   is_read : boolean;
 
-  @ManyToOne((type) => Utilisateur, utilisateur => utilisateur.envoyeur)
+  @Column()
+  expediteur_id : number;
+
+  @Column()
+  recepteur_id : number;
+
+  @ManyToOne((type) => Utilisateur, utilisateur => utilisateur.messages_envoyer)
   expediteur: Utilisateur;
 
-  @ManyToOne((type) => Utilisateur, utilisateur => utilisateur.receveur)
+  @ManyToOne((type) => Utilisateur, utilisateur => utilisateur.mssages_recues)
   recepteur: Utilisateur;
+
 }

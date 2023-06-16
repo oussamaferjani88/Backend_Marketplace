@@ -22,11 +22,11 @@ export class MessageService {
     const msg = new Message();
 
     msg.contenu = message.contenu;
-    msg.date_envoi = message.date_envoi;
-    msg.is_read = false;
-
     msg.expediteur = await this.findUserById(expediteurId);
     msg.recepteur = await this.findUserById(recepteurId);
+
+    msg.expediteur_id = expediteurId;
+    msg.recepteur_id = recepteurId;
 
     return this.messageRepository.save(msg);
   }
@@ -43,12 +43,11 @@ export class MessageService {
       .createQueryBuilder('message')
       .where(
         '(message.expediteurId = :expediteur AND message.recepteurId = :recepteur) OR (message.expediteurId = :recepteur AND message.recepteurId = :expediteur)',
-        { expediteur : expediteurId , recepteur : recepteurId },
+        { expediteur: expediteurId, recepteur: recepteurId },
       )
       .orderBy('message.date_envoi', 'ASC');
-
-    console.log('Query:', query.getSql());
-
+      
+    //console.log('Query:', query.getSql());
     const result = await query.getMany();
 
     return result;
@@ -59,12 +58,40 @@ export class MessageService {
       .createQueryBuilder()
       .update(Message)
       .set({ is_read: true })
-      .where(
-        '(expediteurId = :expediteur AND recepteurId = :recepteur)',
-        { expediteur : expediteurId, recepteur : recepteurId },
-      )
+      .where('(expediteurId = :expediteur AND recepteurId = :recepteur)', {
+        expediteur: expediteurId,
+        recepteur: recepteurId,
+      })
       .execute();
   }
+
+  async getUserDiscussions(userId: number): Promise<Array<any>> {
+    const discussions = await this.messageRepository
+      .createQueryBuilder('message')
+      .leftJoinAndSelect('message.expediteur', 'expediteur')
+      .leftJoinAndSelect('message.recepteur', 'recepteur')
+      .where(
+        'message.expediteur_id = :userId OR message.recepteur_id = :userId',
+        { userId },
+      )
+      .andWhere(
+        'CASE WHEN message.expediteur_id = :userId THEN message.recepteur_id ELSE message.expediteur_id END != :userId',
+        { userId },
+      )
+      .select([
+        'CASE WHEN message.expediteur_id = :userId THEN message.recepteur_id ELSE message.expediteur_id END AS otherUserId',
+        'CASE WHEN message.expediteur_id = :userId THEN recepteur.nom_complet ELSE expediteur.nom_complet END AS otherUserName',
+        'MAX(message.date_envoi) AS lastMessageDate',
+      ])
+      .groupBy('otherUserId,otherUserName')
+      .orderBy('lastMessageDate', 'DESC')
+      .getRawMany();
+
+    console.log(discussions);
+
+    return discussions;
+  }
+  
 
   async findAll(): Promise<Message[]> {
     return await this.messageRepository.find();

@@ -1,7 +1,7 @@
 export class MessageDto {
 
     contenu : string;
-    date_envoi : Date;
-    is_read : boolean;
+    expediteur_id : number;
+    recepteur_id : number;
 
 }

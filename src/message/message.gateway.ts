@@ -1,12 +1,11 @@
 import { OnGatewayConnection, OnGatewayDisconnect, OnGatewayInit, SubscribeMessage, WebSocketGateway, WebSocketServer } from '@nestjs/websockets';
 import { Server , Socket } from 'socket.io';
-import { Controller } from '@nestjs/common';
 import { MessageService } from './message.service';
-//import { Message } from './entities/message.entity';
+import { Message } from './entities/message.entity';
 import { MessageDto } from './dto/message.dto';
 
-@Controller()
-@WebSocketGateway()
+
+@WebSocketGateway(8001,{cors :'*'})
 export class MessageGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
     constructor(private readonly messageService: MessageService) {}
 
@@ -27,13 +26,14 @@ export class MessageGateway implements OnGatewayInit, OnGatewayConnection, OnGat
     console.log(`Client disconnected: ${client.id}`);
   }
 
-  @SubscribeMessage('send_messages')
-  async handle_send_message(client: Socket, data : { message: MessageDto, expediteurId: number, recepteurId: number }) { 
+  @SubscribeMessage('send_message')
+  async handle_send_message(client: Socket, data : { message: MessageDto}) : Promise<Message> { 
     try {
-      const res = await this.messageService.send_message(data.message, data.expediteurId, data.recepteurId);
-      this.server.emit('message', data.message);
+      const message = await this.messageService.send_message(data.message, data.message.expediteur_id, data.message.recepteur_id);
+      //console.log("message :",data.message);
+      client.emit('message', data.message);
       client.emit('message_sent', { success: true });
-      return res;
+      return message;
     } catch (err) {
       client.emit('message_sent', { success: false });
       console.error('message_send_error :', err);
@@ -41,14 +41,28 @@ export class MessageGateway implements OnGatewayInit, OnGatewayConnection, OnGat
   }
 
   @SubscribeMessage('get_messages')
-  async handle_get_messages(client: Socket, data : { expediteurId: number, recepteurId: number }) { 
+  async handle_get_messages(client: Socket, data : { expediteur: number, recepteur: number }) : Promise<Message[]> { 
+    //console.log(`Data = ${JSON.stringify(data)}`);
     try {
-      const messages = await this.messageService.get_messages(data.expediteurId, data.recepteurId);
-      this.server.emit('messages', messages);
+      const messages = await this.messageService.get_messages(data.expediteur, data.recepteur);
+      //console.log(`messages = ${JSON.stringify(messages)}`);
+      client.emit('messages', messages);
       return messages;
     } catch (err) {
       console.error(err);
       client.emit('get_messages_error', { success: false });
+    }
+  }
+
+  @SubscribeMessage('get_discussions') 
+  async handle_get_discussions (client: Socket, data : { user_id: number }) {
+    try {
+      const discussions = await this.messageService.getUserDiscussions(data.user_id);
+      console.log(`discussions = ${JSON.stringify(discussions)}`);
+      client.emit('discussions', discussions);
+    } catch (err) {
+      console.error(err);
+      client.emit('get_discussions_error', { success: false });
     }
   }
 
@@ -75,4 +89,5 @@ export class MessageGateway implements OnGatewayInit, OnGatewayConnection, OnGat
       this.server.emit('error', 'Failed to remove message');
     }       
   }
+
 }
