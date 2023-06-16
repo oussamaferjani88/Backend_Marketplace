@@ -13,16 +13,18 @@ export class AuthService {
         private jwtService: JwtService
         ) {} 
 
-      async AdminlogIn(username: string, pwd: string): Promise<any> {
-        const admin = await this.adminService.validateAdmin(username,pwd);
+      async AdminlogIn(email: string, pwd: string): Promise<any> {
+        const admin = await this.adminService.validateAdmin(email,pwd);
         if (!admin) {
             throw new UnauthorizedException();
           }
-          const payload = { username: admin.username, sub: admin.id };
+          const payload = { email: admin.email, sub: admin.id };
           return {
             access_token: await this.jwtService.signAsync(payload),
           };
       }
+
+      
       
       async UserlogIn(email: string, pwd: string): Promise<any> {
         const user = await this.utilisateurService.validateUser(email,pwd);
@@ -32,6 +34,8 @@ export class AuthService {
           const payload = { email: user.email, sub: user.id };
           return {
             access_token: await this.jwtService.signAsync(payload),
+            est_interdit: user.est_interdit, // Include the est_interdit property in the response
+
           };
       }
 }

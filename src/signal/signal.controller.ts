@@ -9,7 +9,7 @@ import {
 } from '@nestjs/common';
 import { SignalService } from './signal.service';
 import { Signal } from './entities/signal.entity';
-
+import { CreateSignalDto } from './dto/create-signal.dto';
 @Controller('signals')
 export class SignalController {
   constructor(private readonly signalService: SignalService) {}
@@ -25,8 +25,8 @@ export class SignalController {
   }
 
   @Post()
-  create(@Body() signal: Partial<Signal>): Promise<Signal> {
-    return this.signalService.create(signal);
+  create(@Body() createSignalDto: CreateSignalDto): Promise<Signal> {
+    return this.signalService.create(createSignalDto);
   }
 
   @Patch(':id')

@@ -4,6 +4,7 @@ import { Image } from 'src/image/entities/image.entity';
 import { Signal } from 'src/signal/entities/signal.entity';
 import { SousCategorie } from 'src/sous-categorie/entities/sous-categorie.entity';
 import { Video } from 'src/video/entities/video.entity';
+import { Achat } from 'src/achat/entities/achat.entity';
 import {
   Entity,
   Column,
@@ -48,15 +49,12 @@ export class Produit {
   @ManyToOne(
     (type) => SousCategorie,
     (sousCategorie) => sousCategorie.produits /*, { nullable: true }*/,
+     {onDelete : "CASCADE"}  
   )
   sousCategorie: SousCategorie;
 
   
-  @ManyToOne(
-    (type) => SousCategorie,
-    (Categorie) => Categorie.produits /*, { nullable: true }*/,
-  )
-  Categorie: SousCategorie;
+  
 
   @ManyToMany(() => Boutique, (boutique) => boutique.produits)
   @JoinTable()
@@ -70,4 +68,8 @@ export class Produit {
 
   @OneToMany(() => Video, (video) => video.produit , {cascade : true})
   videos: Video[];
+
+  @OneToMany(() => Achat, (achat) => achat.produit)
+achats: Achat[];
+
 }

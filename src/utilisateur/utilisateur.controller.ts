@@ -74,16 +74,14 @@ export class UtilisateurController {
     }
   }
 
-  // async update(id: number, utilisateur: Partial<Utilisateur>,): Promise<Utilisateur> {
-  //   await this.utilisateurRepository.update(id, utilisateur);
-  //   return this.utilisateurRepository.findOne({ where: { id } });
-  // }
 
   @Put(':id')
   async update(
     @Param('id') id: number,
     @Body() utilisateurDto: UpdateUtilisateurDto,
   ): Promise<Utilisateur> {
+    console.log("id : ",id);
+    console.log("utilisateurDto : ",utilisateurDto);
     return this.utilisateurService.update(id, utilisateurDto);
   }
 

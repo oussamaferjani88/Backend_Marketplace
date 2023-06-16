@@ -1,4 +1,5 @@
-import { Injectable } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch,Put , Param, Delete ,  UploadedFile,  CanActivate, ExecutionContext,
+  NotFoundException,BadRequestException  ,Res,Injectable} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Categorie } from './entities/categorie.entity';
@@ -37,18 +38,29 @@ export class CategorieService {
   }
   
 
-  async update(id: number, categorie: Categorie): Promise<Categorie> {
-    await this.categorieRepository.update(id, categorie);
-    return await this.categorieRepository.findOne({where: {id: id, }});
+
+
+  async update(id: number, updateCategorieDto: UpdateCategorieDto, coverImageFile?: Express.Multer.File): Promise<Categorie> {
+    const categorie = await this.categorieRepository.findOne({ where: { id }});
+    if (!categorie) {
+      throw new NotFoundException(`Categorie with ID ${id} not found`);
+    }
+
+    if (coverImageFile) {
+      updateCategorieDto.coverImage = coverImageFile.filename;
+    }
+
+    Object.assign(categorie, updateCategorieDto);
+
+    return this.categorieRepository.save(categorie);
   }
+
+  
 
   async remove(id: number): Promise<void> {
     await this.categorieRepository.delete(id);
   }
 
-  // async uploadCoverImage(coverImage: string, id: number) {
-  //   return this.categorieRepository.update(id, { coverImage: coverImage });
-  // }
 
   async uploadCoverImage(coverImage: string, id: number) {
     console.log("coverImage :",coverImage);

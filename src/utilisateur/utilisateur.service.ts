@@ -21,7 +21,7 @@ export class UtilisateurService {
 
   async findOneId(id: number): Promise<Utilisateur> {
     return this.utilisateurRepository.findOne({ where: { id } ,
-      relations : ['produits' , 'produits.images' , 'produits.videos']
+      relations : ['produits' , 'produits.images' , 'produits.videos' , 'produits.sousCategorie' , 'produits.sousCategorie.categorie']
     
     });
   }
@@ -34,7 +34,7 @@ export class UtilisateurService {
 
   async validateUser(email: string, password: string): Promise<Utilisateur> {
     const user = await this.findOneEmail(email);
-    if (user) {
+    if (user ) {
       console.log('Stored hashed password:', user.password);
   
       const passwordMatch = await bcrypt.compare(password, user.password);
@@ -76,7 +76,7 @@ export class UtilisateurService {
   // }
   async update(id: number, utilisateurDto: UpdateUtilisateurDto): Promise<Utilisateur> {
     await this.utilisateurRepository.update(id, utilisateurDto);
-    return this.utilisateurRepository.findOne({ where: { id }});
+    return await this.utilisateurRepository.findOne({ where: { id }});
   }
 
 
@@ -87,7 +87,7 @@ export class UtilisateurService {
 
   async uploadProfileImage(profileImage: string, id: number) {
     console.log("profileImage :",profileImage);
-    return this.utilisateurRepository.update(id, { profileImage :profileImage });
+    return  this.utilisateurRepository.update(id, { profileImage :profileImage });
   }
 
 
