@@ -14,7 +14,7 @@ id : number ;
 nomSc : string;
 
 
-@OneToMany((type) => Produit, (produit) => produit.sousCategorie  /*, { nullable: true }*/      )
+@OneToMany((type) => Produit, (produit) => produit.sousCategorie  /*, { nullable: true }*/ , {onDelete : "CASCADE"}     )
 produits: Produit[];
 
   

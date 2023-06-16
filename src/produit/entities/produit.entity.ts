@@ -4,6 +4,7 @@ import { Image } from 'src/image/entities/image.entity';
 import { Signal } from 'src/signal/entities/signal.entity';
 import { SousCategorie } from 'src/sous-categorie/entities/sous-categorie.entity';
 import { Video } from 'src/video/entities/video.entity';
+import { Achat } from 'src/achat/entities/achat.entity';
 import {
   Entity,
   Column,
@@ -33,6 +34,9 @@ export class Produit {
   @CreateDateColumn()
   date_p: Date;
 
+  @Column({ nullable: true })
+  localisation: string;
+
   @Column({default : false})
   vendue: boolean;
 
@@ -42,8 +46,15 @@ export class Produit {
   @ManyToOne(() => Utilisateur, (utilisateur) => utilisateur.produits)
   utilisateur: Utilisateur;
 
-  @ManyToOne((type) => SousCategorie,(sousCategorie) => sousCategorie.produits)
+  @ManyToOne(
+    (type) => SousCategorie,
+    (sousCategorie) => sousCategorie.produits /*, { nullable: true }*/,
+     {onDelete : "CASCADE"}  
+  )
   sousCategorie: SousCategorie;
+
+  
+  
 
   @ManyToMany(() => Boutique, (boutique) => boutique.produits)
   @JoinTable()
@@ -52,9 +63,13 @@ export class Produit {
   @OneToMany(() => Signal, (signal) => signal.produit)
   signals: Signal[];
 
-  @OneToMany(() => Image, (image) => image.produit, { cascade: true })
+  @OneToMany(() => Image, (image) => image.produit , {cascade : true})
   images: Image[];
 
-  @OneToMany(() => Video, (video) => video.produit, { cascade: true })
+  @OneToMany(() => Video, (video) => video.produit , {cascade : true})
   videos: Video[];
+
+  @OneToMany(() => Achat, (achat) => achat.produit)
+achats: Achat[];
+
 }

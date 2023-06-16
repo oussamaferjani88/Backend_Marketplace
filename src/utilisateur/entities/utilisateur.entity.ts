@@ -3,6 +3,7 @@ import { Boutique } from 'src/boutique/entities/boutique.entity';
 import { Evaluation } from 'src/evaluation/entities/evaluation.entity';
 import { Message } from 'src/message/entities/message.entity';
 import { Signal } from 'src/signal/entities/signal.entity';
+import { Achat } from 'src/achat/entities/achat.entity';
 import {
   Entity,
   Column,
@@ -33,16 +34,15 @@ export class Utilisateur {
   @Column({ nullable: true })
   localisation: string;
 
-  @Column({ nullable: true })
+  @Column({ default : false })
   est_interdit: boolean;
 
-  @Column({ nullable: true })
-  note: number;
+  
 
   @Column({ nullable: true })
   profileImage: string;
 
-  @OneToMany(() => Produit, (produit) => produit.utilisateur)
+  @OneToMany(() => Produit, (produit) => produit.utilisateur , { cascade: true })
   produits: Produit[];
 
   @OneToMany((type) => Evaluation, (evaluation) => evaluation.utilisateur)
@@ -51,12 +51,14 @@ export class Utilisateur {
   @OneToMany((type) => Boutique, (boutique) => boutique.utilisateur)
   boutiques: Boutique[];
 
-  @OneToMany((type) => Signal, (signal) => signal.utilisateur)
-  signals: Signal[];
 
   @OneToMany((type) => Message, (message) => message.expediteur)
   envoyeur: Message[];
 
   @OneToMany((type) => Message, (message) => message.recepteur)
-  receveur: Message[];
+  Messagesrecus: Message[];
+
+  @OneToMany(() => Achat, (achat) => achat.utilisateur)
+  achats: Achat[];
+
 }

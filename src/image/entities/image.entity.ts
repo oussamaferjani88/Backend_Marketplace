@@ -22,6 +22,6 @@ export class Image {
     @Column()
     fileName : string;
 
-  @ManyToOne((type) => Produit, (produit) => produit.images)
-  produit: Produit;
+    @ManyToOne(() => Produit, (produit) => produit.images)
+    produit: Produit;
 }

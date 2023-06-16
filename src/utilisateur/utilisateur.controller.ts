@@ -38,7 +38,7 @@ export class isUtilisateurExistGuard implements CanActivate {
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const req = context.switchToHttp().getRequest();
     const idUtilisateur = req.params.id;
-    console.log('#guard, Categorie id = ' + idUtilisateur  );
+    console.log('#guard, Utilisateur id = ' + idUtilisateur  );
     const f = await this.utilisateurService.findOneId(idUtilisateur);
     if (!f)
       throw new NotFoundException(`Utilisateur with ID ${idUtilisateur} not found`);
@@ -74,16 +74,14 @@ export class UtilisateurController {
     }
   }
 
-  // async update(id: number, utilisateur: Partial<Utilisateur>,): Promise<Utilisateur> {
-  //   await this.utilisateurRepository.update(id, utilisateur);
-  //   return this.utilisateurRepository.findOne({ where: { id } });
-  // }
 
   @Put(':id')
   async update(
     @Param('id') id: number,
     @Body() utilisateurDto: UpdateUtilisateurDto,
   ): Promise<Utilisateur> {
+    console.log("id : ",id);
+    console.log("utilisateurDto : ",utilisateurDto);
     return this.utilisateurService.update(id, utilisateurDto);
   }
 
@@ -111,13 +109,25 @@ export class UtilisateurController {
   }
   
 
+
+
   @Get('image/:filename')
   async serveImage(@Res() res: Response, @Param('filename') filename: string) {
-    const image = readFileSync(`./uploads/${filename}`);
-    res.contentType('image/jpeg');
-    res.send(image);
+    if (!filename) {
+      throw new NotFoundException('Image not found');
+    }
+  
+    const imagePath = `./uploads/${filename}`;
+  
+    try {
+      const image = readFileSync(imagePath);
+      res.contentType('image/jpeg');
+      res.send(image);
+    } catch (error) {
+      throw new NotFoundException('Image not found');
+    }
   }
-
+  
 
 
 

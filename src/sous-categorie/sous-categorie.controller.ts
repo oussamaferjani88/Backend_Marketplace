@@ -1,10 +1,11 @@
-import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put , Patch} from '@nestjs/common';
 import { SousCategorie } from './entities/sous-categorie.entity';
 import { SousCategorieService } from './sous-categorie.service';
 import { Produit } from 'src/produit/entities/produit.entity';
 import { Categorie } from 'src/categorie/entities/categorie.entity';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
+import { UpdateSousCategorieDto } from './dto/update-sous-categorie.dto';
 @Controller('sous-categories')
 export class SousCategorieController {
   constructor(
@@ -33,18 +34,21 @@ export class SousCategorieController {
     return await this.sousCategorieService.findOne(parseInt(id));
   }
 
-  @Put(':id')
+  @Patch(':id')
   async update(
-    @Param('id') id: string,
-    @Body() sousCategorie: SousCategorie,
+    @Param('id') id: number,
+    @Body() sousCategorieDto: UpdateSousCategorieDto,
   ): Promise<SousCategorie> {
-    return await this.sousCategorieService.update(parseInt(id), sousCategorie);
+    return this.sousCategorieService.update(id, sousCategorieDto);
   }
 
   @Delete(':id')
   async remove(@Param('id') id: string): Promise<void> {
     return await this.sousCategorieService.remove(parseInt(id));
   }
+
+
+
   @Get('categorie/:categorieId')
   async findSousCategoriesByCategorie(@Param('categorieId') categorieId: string): Promise<SousCategorie[]> {
     return await this.sousCategorieService.findSousCategoriesByCategorie(parseInt(categorieId));

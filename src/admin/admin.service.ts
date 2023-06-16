@@ -17,8 +17,8 @@ export class AdminService {
     return this.adminRepository.find();
   }
 
-  async findOneUsername(username: string): Promise<Admin | undefined> {
-    const admin = await this.adminRepository.findOne({ where: { username } });
+  async findOneEmail(email: string): Promise<Admin | undefined> {
+    const admin = await this.adminRepository.findOne({ where: { email } });
     return admin;
   }
 
@@ -61,9 +61,9 @@ export class AdminService {
     await this.adminRepository.delete(id);
   }
 
-  async validateAdmin(username: string, password: string): Promise<Admin | undefined> {
+  async validateAdmin(email: string, password: string): Promise<Admin | undefined> {
 
-    const admin = await this.findOneUsername(username);
+    const admin = await this.findOneEmail(email);
     if (admin && (await bcrypt.compare(password, admin.password))) {
       return admin;
     }

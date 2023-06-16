@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Signal } from './entities/signal.entity';
+import { CreateSignalDto } from './dto/create-signal.dto';
 
 @Injectable()
 export class SignalService {
@@ -11,14 +12,17 @@ export class SignalService {
   ) {}
 
   async findAll(): Promise<Signal[]> {
-    return await this.signalRepository.find();
+    return await this.signalRepository.find({ relations:['produit']});
   }
 
   async findOne(id: number): Promise<Signal> {
-    return await this.signalRepository.findOne({where : {id}});
+    return await this.signalRepository.findOne({where : {id} , relations:['produit']
+    
+    });
   }
 
-  async create(signal: Partial<Signal>): Promise<Signal> {
+  async create(signalDto: CreateSignalDto): Promise<Signal> {
+    const signal = this.signalRepository.create(signalDto);
     return await this.signalRepository.save(signal);
   }
 

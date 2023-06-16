@@ -12,7 +12,7 @@ export class AuthController {
     @HttpCode(HttpStatus.OK)
     @Post('Adminlogin')
     AdminLogIn(@Body() admin: AdminDto) {
-        return this.authService.AdminlogIn(admin.username, admin.password);
+        return this.authService.AdminlogIn(admin.email, admin.password);
     }
 
     @HttpCode(HttpStatus.OK)
@@ -20,6 +20,5 @@ export class AuthController {
     UtilisateurLogIn(@Body() utilisateur: UtilisateurDto) {
         return this.authService.UserlogIn(utilisateur.email, utilisateur.password);
     }
-    
 
 }

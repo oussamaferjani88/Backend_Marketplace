@@ -47,7 +47,7 @@ export class ProduitService {
   async findOneId(produitId: number): Promise<Produit> {
     return await this.produitRepository.findOne({
       where: { id: produitId },
-      relations: ['boutiques', 'sousCategorie', 'images', 'videos' , 'utilisateur'],
+      relations: ['boutiques', 'sousCategorie', 'images', 'videos' , 'utilisateur' ],
     });
   }
 
@@ -90,25 +90,38 @@ export class ProduitService {
     return await this.produitRepository.save(produit);
   }
 
-  async findProduitByCategorie(categorieId: number): Promise<Produit[]> {
+  async findProduitByCategorie(
+    categorieId: number,
+    minPrice: number,
+    maxPrice: number
+  ): Promise<Produit[]> {
     return await this.produitRepository
       .createQueryBuilder('produit')
       .leftJoinAndSelect('produit.boutiques', 'boutique')
+      .leftJoinAndSelect('produit.images', 'images')
+      .leftJoinAndSelect('produit.videos', 'videos')
       .leftJoinAndSelect('produit.sousCategorie', 'sousCategorie')
-      .leftJoinAndSelect('souCategorie.categorie', 'categorie')
+      .leftJoinAndSelect('sousCategorie.categorie', 'categorie')
       .where('categorie.id = :id', { id: categorieId })
+      .andWhere('produit.prix >= :minPrice', { minPrice })
+      .andWhere('produit.prix <= :maxPrice', { maxPrice })
       .getMany();
   }
-
+  
   async findProduitBySousCategorie(
     sousCategorieId: number,
+    minPrice: number,
+    maxPrice: number
   ): Promise<Produit[]> {
     return this.produitRepository
       .createQueryBuilder('produit')
       .leftJoinAndSelect('produit.SousCategorie', 'sousCategorie')
       .where('sousCategorie.id = :id', { id: sousCategorieId })
+      .andWhere('produit.prix >= :minPrice', { minPrice })
+      .andWhere('produit.prix <= :maxPrice', { maxPrice })
       .getMany();
   }
+  
 
   async findProduitByUtilisateur(userId: number): Promise<Produit[]> {
     return this.produitRepository
@@ -145,7 +158,28 @@ export class ProduitService {
     return produit.videos;
   }
 
+  async removeImage(imageId: number): Promise<void> {
+    await this.imageRepository.delete(imageId);
+  }
+  
+  async removeVideo(videoId: number): Promise<void> {
+    await this.videoRepository.delete(videoId);
+  }
+  
 
-
-
+  async searchProducts(query: string): Promise<Produit[]> {
+    const products = await this.produitRepository.createQueryBuilder('produit')
+      .where('LOWER(produit.nomP) LIKE LOWER(:query)', { query: `%${query}%` })
+      .orWhere('LOWER(produit.description) LIKE LOWER(:query)', { query: `%${query}%` })
+      .orWhere('LOWER(produit.localisation) LIKE LOWER(:query)', { query: `%${query}%` })
+      .leftJoinAndSelect('produit.sousCategorie', 'sousCategorie')
+      .leftJoinAndSelect('produit.images', 'images')
+      .leftJoinAndSelect('produit.videos', 'videos')
+      .leftJoinAndSelect('produit.utilisateur', 'utilisateur')
+      .getMany();
+  
+    return products;
+  }
+  
+  
 }

@@ -17,7 +17,9 @@ import { AuthModule } from './auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
 import { MulterModule } from '@nestjs/platform-express';
 import { MailModule } from './mail/mail.module';
-
+import { DashboardModule } from './dashboard/dashboard.module';
+import { AchatModule } from './achat/achat.module';
+import { KeywordMatchingModule } from './keyword-matching/keyword-matching.module';
 @Module({
   imports: [
     AdminModule,
@@ -49,6 +51,9 @@ import { MailModule } from './mail/mail.module';
      
     }),
     MailModule,
+    DashboardModule,
+    AchatModule,
+    KeywordMatchingModule,
   ],
   controllers: [AppController],
   providers: [AppService],

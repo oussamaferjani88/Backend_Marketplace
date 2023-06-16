@@ -1,5 +1,6 @@
 export class CreateSignalDto {
 
-    rasion : string ; 
+    content : string ; 
+    ProduitId : number;
 
 }

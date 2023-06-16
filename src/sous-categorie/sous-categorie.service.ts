@@ -1,9 +1,9 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable , NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { SousCategorie } from './entities/sous-categorie.entity';
 import { Produit } from 'src/produit/entities/produit.entity';
-
+import { UpdateSousCategorieDto } from './dto/update-sous-categorie.dto';
 @Injectable()
 export class SousCategorieService {
   constructor(
@@ -42,20 +42,30 @@ export class SousCategorieService {
   }
 
   async findOne(id: number): Promise<SousCategorie> {
-    return await this.sousCategorieRepository.findOne({ where: { id: id } });
+    return await this.sousCategorieRepository.findOne({ where: { id: id } , relations: ['categorie'] });
   }
 
   async update(
     id: number,
-    sousCategorie: SousCategorie,
+    sousCategorieDto: UpdateSousCategorieDto,
   ): Promise<SousCategorie> {
-    await this.sousCategorieRepository.update(id, sousCategorie);
-    return await this.sousCategorieRepository.findOne({ where: { id: id } });
+    const { nomSc } = sousCategorieDto;
+    const sousCategorie = await this.sousCategorieRepository.findOne({ where: { id: id }});
+    if (!sousCategorie) {
+      throw new NotFoundException('Sous Catégorie not found');
+    }
+    sousCategorie.nomSc = nomSc;
+    return await this.sousCategorieRepository.save(sousCategorie);
   }
+
+
+
 
   async remove(id: number): Promise<void> {
     await this.sousCategorieRepository.delete(id);
   }
+
+  
   async findSousCategoriesByCategorie(
     categorieId: number,
   ): Promise<SousCategorie[]> {

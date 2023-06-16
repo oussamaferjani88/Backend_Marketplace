@@ -11,6 +11,7 @@ import {
   ExecutionContext,
   NotFoundException,
   UploadedFile,
+
 } from '@nestjs/common';
 import {
   FileFieldsInterceptor,
@@ -25,6 +26,7 @@ import {
   Res,
   UploadedFiles,
   UseGuards,
+  Query,
   UseInterceptors,
 } from '@nestjs/common/decorators';
 import { ProduitService } from './produit.service';
@@ -63,6 +65,14 @@ export class ProduitController {
     return this.produitService.create(produitDto);
   }
 
+  
+
+
+  @Get('/search')
+  async search(@Query('query') query: string): Promise<Produit[]> {
+    const products = await this.produitService.searchProducts(query);
+    return products;
+  }
 
   @Get()
   findAll(): Promise<Produit[]> {
@@ -96,17 +106,29 @@ export class ProduitController {
   @Get('/byCategorie/:id')
   findProduitByCategorie(
     @Param('id', ParseIntPipe) categorieId: number,
+    @Query('minPrice', ParseIntPipe) minPrice: number,
+    @Query('maxPrice', ParseIntPipe) maxPrice: number
   ): Promise<Produit[]> {
-    return this.produitService.findProduitByCategorie(categorieId);
+    return this.produitService.findProduitByCategorie(
+      categorieId,
+      minPrice,
+      maxPrice
+    );
   }
-
+  
   @Get('/bySousCategorie/:id')
   findProduitBySousCategorie(
     @Param('id', ParseIntPipe) sousCategorieId: number,
+    @Query('minPrice', ParseIntPipe) minPrice: number,
+    @Query('maxPrice', ParseIntPipe) maxPrice: number
   ): Promise<Produit[]> {
-    return this.produitService.findProduitBySousCategorie(sousCategorieId);
+    return this.produitService.findProduitBySousCategorie(
+      sousCategorieId,
+      minPrice,
+      maxPrice
+    );
   }
-
+  
   @Get('/produit_search/:name')
   findProduitByName(
     @Param('searchBarInput') searchBarInput: string,
@@ -228,7 +250,18 @@ export class ProduitController {
 
 
 
-
+  @Delete('images/:imageId')
+  @UseGuards(isProduitExistGuard)
+  removeImage(@Param('imageId', ParseIntPipe) imageId: number): Promise<void> {
+    return this.produitService.removeImage(imageId);
+  }
+  
+  @Delete('videos/:videoId')
+  @UseGuards(isProduitExistGuard)
+  removeVideo(@Param('videoId', ParseIntPipe) videoId: number): Promise<void> {
+    return this.produitService.removeVideo(videoId);
+  }
+  
 
 
 
