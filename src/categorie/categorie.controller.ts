@@ -44,7 +44,7 @@ export class CategorieController {
   constructor(private readonly categorieService: CategorieService) {}
   @Post()
   create(@Body() createCategorieDto: any) {
-    console.log('createFormationDto = ' + JSON.stringify(createCategorieDto));
+    console.log('createCategorieDto = ' + JSON.stringify(createCategorieDto));
     return this.categorieService.create(createCategorieDto);
   }
 

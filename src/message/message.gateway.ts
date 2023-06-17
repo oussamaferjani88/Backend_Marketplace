@@ -29,8 +29,8 @@ export class MessageGateway implements OnGatewayInit, OnGatewayConnection, OnGat
   @SubscribeMessage('send_message')
   async handle_send_message(client: Socket, data : { message: MessageDto}) : Promise<Message> { 
     try {
-      const message = await this.messageService.send_message(data.message, data.message.expediteur_id, data.message.recepteur_id);
-      //console.log("message :",data.message);
+      const message = await this.messageService.send_message(data.message, data.message.expediteurId, data.message.recepteurId);
+      console.log("message :",data.message);
       client.emit('message', data.message);
       client.emit('message_sent', { success: true });
       return message;
